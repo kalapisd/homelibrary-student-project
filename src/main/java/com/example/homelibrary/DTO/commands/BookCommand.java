@@ -19,8 +19,7 @@ public class BookCommand {
     private String title;
     private String subTitle;
     private List<String> authors;
-    private Genre genre;
-
+    private String genre;
     @ValidPublishDate
     private int publishedYear;
 
