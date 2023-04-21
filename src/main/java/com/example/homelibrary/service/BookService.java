@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -116,7 +117,7 @@ public class BookService {
             return null;
         } else {
             logger.info("Book with id: {} was updated successfully!", id);
-            return mapper.toDTO(updateValues(book.get(), command));
+            return mapper.toDTO(bookRepository.save(updateValues(book.get(), command)));
         }
     }
 
@@ -142,10 +143,8 @@ public class BookService {
             System.out.println("!");
         } else {
             Book bookToRemove = book.get();
-            List<Author> authorList = authorService.findAuthorsOfBook(id);
-            deleteBookFromAuthors(authorList, bookToRemove);
-            deleteBookFromGenre(book.get().getGenre(), bookToRemove);
-
+            deleteBookFromAuthors(new ArrayList<>(bookToRemove.getAuthors()), bookToRemove);
+            deleteBookFromGenre(bookToRemove.getGenre(), bookToRemove);
         }
 
         int deletedRows = bookRepository.deleteBooksById(id);
