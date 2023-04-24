@@ -1,8 +1,8 @@
 package com.example.homelibrary.service;
 
+import com.example.homelibrary.DTO.BookDTO;
 import com.example.homelibrary.DTO.commands.APICommand;
 import com.example.homelibrary.DTO.commands.BookCommand;
-import com.example.homelibrary.DTO.BookDTO;
 import com.example.homelibrary.entity.Author;
 import com.example.homelibrary.entity.Book;
 import com.example.homelibrary.entity.Genre;
@@ -31,6 +31,7 @@ public class BookService {
 
     private Logger logger = LoggerFactory.getLogger(BookService.class);
 
+
     public BookService(GoogleBooksApiConnection apiConnection, BookRepository bookRepository, AuthorService authorService, GenreService genreService, BookMapper mapper) {
         this.apiConnection = apiConnection;
         this.bookRepository = bookRepository;
@@ -39,7 +40,7 @@ public class BookService {
         this.mapper = mapper;
     }
 
-    public List<BookDTO> getAllBooks() {
+    public List<BookDTO> findAllBooks() {
         return bookRepository.findAll().stream().map(book -> mapper.toDTO(book)).toList();
     }
 
@@ -63,6 +64,11 @@ public class BookService {
         }
     }
 
+    public List<BookDTO> findAllBooksOfAuthor(String name){
+        List<Book> books = bookRepository.findAllByAuthors_Name(name);
+        return books.stream().map(mapper::toDTO).toList();
+    }
+
     @Transactional
     public BookDTO saveBookFomAPiDATA(APICommand apiCommand) {
         BookCommand command = getBookFromAPI(apiCommand);
@@ -72,7 +78,7 @@ public class BookService {
 
     @Transactional
     public BookDTO save(BookCommand command) {
-        Set<Author> authors = authorService.getAuthorsOfBook(command.getAuthors());
+        Set<Author> authors = authorService.getAuthorsToSaveBook(command.getAuthors());
         Book book = bookRepository.findByTitle(command.getTitle()).orElseGet(() -> buildBook(command));
         book.addPiece();
 
@@ -96,7 +102,7 @@ public class BookService {
 
     private Book buildBook(BookCommand command) {
 
-        Book book = Book.builder()
+        return Book.builder()
                 .title(command.getTitle())
                 .subTitle(command.getSubTitle())
                 .authors(new HashSet<>())
@@ -105,8 +111,6 @@ public class BookService {
                 .language(command.getLanguage())
                 .piece(0)
                 .build();
-
-        return book;
     }
 
     @Transactional
@@ -122,7 +126,7 @@ public class BookService {
     }
 
     private Book updateValues(Book book, BookCommand command) {
-        Set<Author> authors = authorService.getAuthorsOfBook(command.getAuthors());
+        Set<Author> authors = authorService.getAuthorsToSaveBook(command.getAuthors());
 
         book.setTitle(command.getTitle());
         book.setSubTitle(command.getSubTitle());
@@ -165,7 +169,7 @@ public class BookService {
 
     public void addGenreToBook(Long bookId, String genreType) {
         Book book = bookRepository.findById(bookId).get();
-        Genre genre = genreService.findGenreByGenreType(genreType).get();
+        Genre genre = genreService.getGenreByType(genreType).get();
 
         genre.addBook(book);
         bookRepository.save(book);
@@ -180,4 +184,5 @@ public class BookService {
         genre.removeBook(book);
         genreService.save(genre);
     }
+
 }
