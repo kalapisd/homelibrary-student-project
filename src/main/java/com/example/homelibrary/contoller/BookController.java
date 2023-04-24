@@ -1,11 +1,10 @@
 package com.example.homelibrary.contoller;
 
+import com.example.homelibrary.DTO.BookDTO;
 import com.example.homelibrary.DTO.commands.APICommand;
 import com.example.homelibrary.DTO.commands.BookCommand;
-import com.example.homelibrary.DTO.BookDTO;
 import com.example.homelibrary.service.BookService;
 import jakarta.validation.Valid;
-import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/books")
@@ -35,7 +33,7 @@ public class BookController {
 
     @GetMapping
     public List<BookDTO> getBooks() {
-        return bookService.getAllBooks();
+        return bookService.findAllBooks();
     }
 
     @GetMapping("/{id}")
