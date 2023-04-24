@@ -1,10 +1,11 @@
 package com.example.homelibrary.contoller;
 
-import com.example.homelibrary.DTO.commands.AuthorCommand;
 import com.example.homelibrary.DTO.AuthorDTO;
+import com.example.homelibrary.DTO.BookDTO;
+import com.example.homelibrary.DTO.commands.AuthorCommand;
 import com.example.homelibrary.service.AuthorService;
+import com.example.homelibrary.service.BookService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,15 +20,21 @@ import java.util.List;
 public class AuthorController {
 
     private AuthorService authorService;
+    private BookService bookService;
 
-    @Autowired
-    public AuthorController(AuthorService authorService) {
+    public AuthorController(AuthorService authorService, BookService bookService) {
         this.authorService = authorService;
+        this.bookService = bookService;
     }
 
     @GetMapping
     public List<AuthorDTO> getAuthors() {
-        return authorService.getAllAuthors();
+        return authorService.findAllAuthors();
+    }
+
+    @GetMapping("/books")
+    private List<BookDTO> getBooksOfAuthor(@RequestParam("name") String name) {
+        return bookService.findAllBooksOfAuthor(name);
     }
 
     @GetMapping("/{name}")
