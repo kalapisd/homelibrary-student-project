@@ -1,6 +1,7 @@
 package com.example.homelibrary.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,6 +44,7 @@ public class Genre {
     @Enumerated(EnumType.STRING)
     private GenreType genre;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Book> booksOfGenre = new HashSet<>();
 
