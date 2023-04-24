@@ -23,7 +23,7 @@ public class GenreController {
 
     @GetMapping
     public List<GenreDTO> getAuthors() {
-        return genreService.getAllGenre();
+        return genreService.findAllGenre();
     }
 
     @GetMapping("{id}")
