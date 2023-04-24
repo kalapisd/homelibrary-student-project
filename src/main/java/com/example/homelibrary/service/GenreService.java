@@ -27,8 +27,13 @@ public class GenreService {
         this.mapper = mapper;
     }
 
-    public List<GenreDTO> getAllGenre() {
+    public List<GenreDTO> findAllGenre() {
         return genreRepository.findAll().stream().map(mapper::toDTO).toList();
+    }
+
+
+    public Optional<Genre> getGenreByType(String type) {
+        return genreRepository.findByGenre(GenreType.valueOf(type));
     }
 
     public GenreDTO findGenreById(long id) {
@@ -41,11 +46,18 @@ public class GenreService {
         }
     }
 
-    public Optional<Genre> findGenreByGenreType(String genreType) {
-        return genreRepository.findByGenre(GenreType.valueOf(genreType));
+    public GenreDTO findGenreByGenreType(String genreType) {
+        Optional<Genre> genre = genreRepository.findByGenre(GenreType.valueOf(genreType));
+        if (genre.isPresent()) {
+            return mapper.toDTO(genre.get());
+        } else {
+            logger.info("No such genre was found with id: {}!", genreType);
+            return null;
+        }
     }
 
-    public void save(Genre genre){
+    public void save(Genre genre) {
         genreRepository.save(genre);
     }
+
 }
