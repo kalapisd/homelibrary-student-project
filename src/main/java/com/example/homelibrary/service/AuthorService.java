@@ -53,11 +53,11 @@ public class AuthorService {
         return authorRepository.findAuthorByName(name);
     }
 
-    public List<AuthorDTO> getAllAuthors() {
+    public List<AuthorDTO> findAllAuthors() {
         return authorRepository.findAll().stream().map(author -> mapper.toDTO(author)).toList();
     }
 
-    public Set<Author> getAuthorsOfBook(List<String> authorNames) {
+    public Set<Author> getAuthorsToSaveBook(List<String> authorNames) {
         Set<Author> authorsOfBook = new HashSet<>();
         if (authorNames != null) {
             for (String name : authorNames) {
@@ -65,10 +65,9 @@ public class AuthorService {
                 if (author.isPresent()) {
                     authorsOfBook.add(author.get());
                 } else {
-                    Author generatedAuthor = saveAuthor(new Author(name));
+                    Author generatedAuthor = authorRepository.save(new Author(name));
                     authorsOfBook.add(generatedAuthor);
                 }
-
             }
         }
         return authorsOfBook;
@@ -78,13 +77,9 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
-    public List<Author> findAuthorsOfBook(Long bookId) {
-        return authorRepository.findAllByBooks_Id(bookId);
-    }
-
     public void saveAuthorByName(AuthorCommand command) {
         Author author = new Author(command.getName());
-        saveAuthor(author);
+        authorRepository.save(author);
     }
 
 }
