@@ -1,4 +1,4 @@
-package com.example.homelibrary;
+package com.example.homelibrary.unittests;
 
 import com.example.homelibrary.DTO.AuthorDTO;
 import com.example.homelibrary.DTO.commands.AuthorCommand;
