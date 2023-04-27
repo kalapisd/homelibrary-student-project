@@ -10,7 +10,7 @@ public class GenreMapper {
 
     public GenreDTO toDTO(Genre genre) {
         GenreDTO genreDTO = new GenreDTO();
-        genreDTO.setGenre(genre.getGenre().toString());
+        genreDTO.setGenre(genre.getGenreType().toString());
         genreDTO.setBooksOfGenre(genre.getBooksOfGenre().stream().map(Book::getTitle).toList());
 
         return genreDTO;
