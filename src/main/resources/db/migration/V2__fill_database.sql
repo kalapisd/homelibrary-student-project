@@ -1,4 +1,4 @@
-insert into genre(id, genre)
+insert into genre(id, genre_type)
 values (1, 'ARTS'),
        (2, 'HISTORY'),
        (3, 'HOBBY'),
