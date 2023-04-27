@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidPublishDate {
-    String message() default "Book title can't be a single word";
+    String message() default "Book Published year must be valid";
 
     Class<?>[] groups() default {};
 
