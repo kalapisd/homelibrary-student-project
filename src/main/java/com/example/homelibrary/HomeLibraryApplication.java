@@ -1,11 +1,7 @@
 package com.example.homelibrary;
 
-import com.example.homelibrary.DTO.commands.APICommand;
-import com.example.homelibrary.service.BookService;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class HomeLibraryApplication {
@@ -14,7 +10,7 @@ public class HomeLibraryApplication {
         SpringApplication.run(HomeLibraryApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     public CommandLineRunner run(BookService service) {
         APICommand command = APICommand.builder()
                 .parameter("ISBN")
@@ -25,5 +21,5 @@ public class HomeLibraryApplication {
         return args -> {
             service.saveBookFomAPiDATA(command);
         };
-    }
+    }*/
 }
