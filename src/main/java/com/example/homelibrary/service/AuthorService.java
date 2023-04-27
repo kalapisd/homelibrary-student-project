@@ -77,9 +77,11 @@ public class AuthorService {
         return authorRepository.save(author);
     }
 
-    public void saveAuthorByName(AuthorCommand command) {
+    public AuthorDTO saveAuthorByName(AuthorCommand command) {
         Author author = new Author(command.getName());
-        authorRepository.save(author);
+        return mapper.toDTO(authorRepository.save(author));
     }
+
+
 
 }
