@@ -19,6 +19,7 @@ public class BookMapper {
                 .title(info.getTitle())
                 .subTitle(info.getSubTitle())
                 .authors(info.getAuthors())
+                .genre(null)
                 .publishedYear(info.getPublishedYear())
                 .numOfPages(info.getNumOfPages())
                 .language(convertLanguage(info.getLanguage()))
@@ -37,8 +38,9 @@ public class BookMapper {
         BookDTO bookDTO = new BookDTO();
         bookDTO.setAuthors(book.getAuthors().stream().map(Author::getName).collect(Collectors.toList()));
         bookDTO.setTitle(book.getTitle());
-        bookDTO.setGenre(String.valueOf(bookDTO.getGenre()));
-
+        if (book.getGenre() != null) {
+            bookDTO.setGenre(String.valueOf(book.getGenre().getGenreType()));
+        }
         return bookDTO;
     }
 
