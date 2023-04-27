@@ -30,7 +30,7 @@ create table books_authors
 create table genre
 (
     id    bigserial not null,
-    genre varchar(255),
+    genre_type varchar(255),
     primary key (id)
 );
 
