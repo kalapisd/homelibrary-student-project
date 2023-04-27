@@ -47,7 +47,7 @@ public class BookController {
         }
     }
 
-    @GetMapping("/{title}")
+    @GetMapping("/findbytitle/{title}")
     public ResponseEntity<BookDTO> findBookByTitle(@PathVariable("title") String title) {
         BookDTO bookDTO = bookService.findBookByTitle(title);
 
@@ -70,7 +70,7 @@ public class BookController {
         return ResponseEntity.ok(bookService.saveBookFomAPiDATA(command));
     }
 
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BookDTO> updateBook(@PathVariable("id") Long id, @RequestBody @Valid BookCommand command, BindingResult errors) {
         if (errors.hasErrors()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(bookService.updateBook(id, command));
@@ -81,14 +81,14 @@ public class BookController {
         bookService.deleteBook(id);
     }
 
-    @PostMapping("/addartist")
-    public void addAuthorToBook(@RequestParam("bookId") Long bookId,
+    @PostMapping("/addauthor")
+    public void addAuthorToBook(@RequestParam("bookId") String bookId,
                                 @RequestParam("name") String name) {
         bookService.addAuthorToBook(bookId, name);
     }
 
     @PostMapping("/addgenre")
-    public void addGenreToBook(@RequestParam("bookId") Long bookId,
+    public void addGenreToBook(@RequestParam("bookId") String bookId,
                                @RequestParam("genre") String genre) {
         bookService.addGenreToBook(bookId, genre);
     }
