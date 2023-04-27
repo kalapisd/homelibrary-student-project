@@ -33,7 +33,7 @@ public class GenreService {
 
 
     public Optional<Genre> getGenreByType(String type) {
-        return genreRepository.findByGenre(GenreType.valueOf(type));
+        return genreRepository.findByGenreType(GenreType.valueOf(type));
     }
 
     public GenreDTO findGenreById(long id) {
@@ -47,7 +47,7 @@ public class GenreService {
     }
 
     public GenreDTO findGenreByGenreType(String genreType) {
-        Optional<Genre> genre = genreRepository.findByGenre(GenreType.valueOf(genreType));
+        Optional<Genre> genre = genreRepository.findByGenreType(GenreType.valueOf(genreType));
         if (genre.isPresent()) {
             return mapper.toDTO(genre.get());
         } else {
