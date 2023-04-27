@@ -73,10 +73,8 @@ public class BookService {
     public BookDTO saveBookFomAPiDATA(APICommand apiCommand) {
         BookCommand command = getBookFromAPI(apiCommand);
         return save(command);
-
     }
 
-    @Transactional
     public BookDTO save(BookCommand command) {
         Set<Author> authors = authorService.getAuthorsToSaveBook(command.getAuthors());
         Book book = bookRepository.findByTitle(command.getTitle()).orElseGet(() -> buildBook(command));
@@ -102,7 +100,7 @@ public class BookService {
 
     private Book buildBook(BookCommand command) {
 
-        return Book.builder()
+        Book book =  Book.builder()
                 .title(command.getTitle())
                 .subTitle(command.getSubTitle())
                 .authors(new HashSet<>())
@@ -111,6 +109,12 @@ public class BookService {
                 .language(command.getLanguage())
                 .piece(0)
                 .build();
+
+        if(command.getGenre()!=null){
+            Genre genre = genreService.getGenreByType(command.getGenre()).get();
+            genre.addBook(book);
+        }
+        return book;
     }
 
     @Transactional
@@ -159,16 +163,16 @@ public class BookService {
         }
     }
 
-    public void addAuthorToBook(Long bookId, String name) {
-        Book book = bookRepository.findById(bookId).get();
+    public void addAuthorToBook(String bookId, String name) {
+        Book book = bookRepository.findById(Long.valueOf(bookId)).get();
         Author author = authorService.getAuthorByName(name).get();
 
         author.addBook(book);
         bookRepository.save(book);
     }
 
-    public void addGenreToBook(Long bookId, String genreType) {
-        Book book = bookRepository.findById(bookId).get();
+    public void addGenreToBook(String bookId, String genreType) {
+        Book book = bookRepository.findById(Long.valueOf(bookId)).get();
         Genre genre = genreService.getGenreByType(genreType).get();
 
         genre.addBook(book);
