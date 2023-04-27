@@ -21,7 +21,7 @@ public class BookCommand {
     private List<String> authors;
     private String genre;
     @ValidPublishDate
-    private int publishedYear;
+    private Integer publishedYear;
 
     @NotNull(message = "The number of pages can't be null")
     private int numOfPages;
