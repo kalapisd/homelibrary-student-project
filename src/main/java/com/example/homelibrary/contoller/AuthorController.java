@@ -5,6 +5,9 @@ import com.example.homelibrary.DTO.BookDTO;
 import com.example.homelibrary.DTO.commands.AuthorCommand;
 import com.example.homelibrary.service.AuthorService;
 import com.example.homelibrary.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -20,6 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/authors")
+@Tag(name = "Here you can make operations on authors")
 public class AuthorController {
 
     private AuthorService authorService;
@@ -31,36 +35,43 @@ public class AuthorController {
     }
 
     @GetMapping
+    @Operation(summary = "Find all authors",
+            description = "Here you can get all authors stored in the database.")
     public List<AuthorDTO> getAuthors() {
         return authorService.findAllAuthors();
     }
 
     @GetMapping("/books")
+    @Operation(summary = "Find all books of author",
+            description = "Here you can get all books of an author of interest.")
     private List<BookDTO> getBooksOfAuthor(@RequestParam("name") String name) {
         return bookService.findAllBooksOfAuthor(name);
     }
 
     @GetMapping("/findbyname/{name}")
-    public ResponseEntity<AuthorDTO> findAuthorByName(@PathVariable("name") AuthorCommand command) {
+    @Operation(summary = "Find author by name",
+            description = "Here you can find an author by it's name.")
+    public ResponseEntity<AuthorDTO> findAuthorByName(
+            @Parameter(description = "Name of the author", example = "George Orwell")
+            @PathVariable("name") AuthorCommand command) {
         AuthorDTO authorDTO = authorService.findAuthorByName(command);
-        if (authorDTO == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(authorDTO);
-        }
+        return authorDTO == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(authorDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AuthorDTO> findAuthorById(@PathVariable("id") Long id) {
+    @Operation(summary = "Find author by id",
+            description = "Here you can find an author by it's ID.")
+    public ResponseEntity<AuthorDTO> findAuthorById(
+            @Parameter(description = "Id of the author", example = "1")
+            @PathVariable("id") Long id) {
         AuthorDTO authorDTO = authorService.findAuthorById(id);
-        if (authorDTO == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(authorDTO);
-        }
+        return authorDTO == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(authorDTO);
     }
     @PostMapping
-    public  ResponseEntity<AuthorDTO> saveAuthor(@RequestBody @Valid AuthorCommand authorCommand, BindingResult errors) {
+    @Operation(summary = "Save an author",
+            description = "Here you can save an author by giving it's name to the database.")
+    public  ResponseEntity<AuthorDTO> saveAuthor(
+            @RequestBody @Valid AuthorCommand authorCommand, BindingResult errors) {
         if (errors.hasErrors()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(authorService.saveAuthorByName(authorCommand));
     }
