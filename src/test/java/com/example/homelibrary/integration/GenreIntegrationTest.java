@@ -58,11 +58,19 @@ public class GenreIntegrationTest {
 
     @Test
     void databaseFilledWithSQL_getOneById_shouldReturnCorrectGenre() {
-        Long id = 1L;
+        long id = 1L;
         final ResponseEntity<GenreDTO> response = restTemplate.getForEntity(entityUrl + "/" + id, GenreDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(String.valueOf(GenreType.KIDS), Objects.requireNonNull(response.getBody()).getGenre());
 
+    }
+
+    @Test
+    void databaseFilledWithSQL_getOneByType_shouldReturnCorrectGenre() {
+        String getgenreURL = entityUrl + "/findbytype?genretype=" + GenreType.KIDS;
+        final ResponseEntity<GenreDTO> response = restTemplate.getForEntity(getgenreURL, GenreDTO.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(String.valueOf(GenreType.KIDS), Objects.requireNonNull(response.getBody()).getGenre());
     }
 
 }
