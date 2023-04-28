@@ -64,7 +64,7 @@ public class BookService {
         }
     }
 
-    public List<BookDTO> findAllBooksOfAuthor(String name){
+    public List<BookDTO> findAllBooksOfAuthor(String name) {
         List<Book> books = bookRepository.findAllByAuthors_Name(name);
         return books.stream().map(mapper::toDTO).toList();
     }
@@ -100,7 +100,7 @@ public class BookService {
 
     private Book buildBook(BookCommand command) {
 
-        Book book =  Book.builder()
+        Book book = Book.builder()
                 .title(command.getTitle())
                 .subTitle(command.getSubTitle())
                 .authors(new HashSet<>())
@@ -110,7 +110,7 @@ public class BookService {
                 .piece(0)
                 .build();
 
-        if(command.getGenre()!=null){
+        if (command.getGenre() != null) {
             Genre genre = genreService.getGenreByType(command.getGenre()).get();
             genre.addBook(book);
         }
@@ -165,9 +165,13 @@ public class BookService {
 
     public void addAuthorToBook(String bookId, String name) {
         Book book = bookRepository.findById(Long.valueOf(bookId)).get();
-        Author author = authorService.getAuthorByName(name).get();
-
-        author.addBook(book);
+        Optional<Author> author = authorService.getAuthorByName(name);
+        if (author.isPresent()) {
+            author.get().addBook(book);
+        } else {
+            Author generatedAuthor = authorService.saveAuthor(new Author(name));
+            generatedAuthor.addBook(book);
+        }
         bookRepository.save(book);
     }
 
