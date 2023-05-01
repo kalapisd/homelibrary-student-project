@@ -1,7 +1,6 @@
 package com.example.homelibrary.entity;
 
 public enum GenreType {
-
     ARTS,
     HISTORY,
     HOBBY,

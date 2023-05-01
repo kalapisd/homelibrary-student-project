@@ -18,10 +18,10 @@ import java.util.Set;
 @Service
 public class AuthorService {
 
-    private AuthorRepository authorRepository;
-    private AuthorMapper mapper;
+    private static final Logger logger = LoggerFactory.getLogger(AuthorService.class);
 
-    private Logger logger = LoggerFactory.getLogger(AuthorService.class);
+    private final AuthorRepository authorRepository;
+    private final AuthorMapper mapper;
 
     @Autowired
     public AuthorService(AuthorRepository authorRepository, AuthorMapper mapper) {
@@ -29,12 +29,12 @@ public class AuthorService {
         this.mapper = mapper;
     }
 
-    public AuthorDTO findAuthorByName(AuthorCommand command) {
-        Optional<Author> author = authorRepository.findAuthorByName(command.getName());
+    public AuthorDTO findAuthorByName(String name) {
+        Optional<Author> author = authorRepository.findAuthorByName(name);
         if (author.isPresent()) {
             return mapper.toDTO(author.get());
         } else {
-            logger.info("No such author was found with name: {}!", command.getName());
+            logger.info("No such author was found with name: {}!", name);
             return null;
         }
     }

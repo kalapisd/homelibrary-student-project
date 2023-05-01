@@ -15,7 +15,7 @@ import java.util.Objects;
 public class GenreDTO {
 
     private String genre;
-    private List<String> booksOfGenre;
+    private List<BookDTO> booksOfGenre;
 
     @Override
     public boolean equals(Object o) {

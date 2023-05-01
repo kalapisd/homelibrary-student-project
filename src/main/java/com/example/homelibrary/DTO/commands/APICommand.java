@@ -1,5 +1,6 @@
 package com.example.homelibrary.DTO.commands;
 
+import com.example.homelibrary.utils.validator.ValidAPICommandParameter;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class APICommand {
 
-    @NotBlank(message = "Parameter must be valid!")
+    @ValidAPICommandParameter
     private String parameter;
 
     @NotBlank(message = "Value must be valid!")

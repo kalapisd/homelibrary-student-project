@@ -78,19 +78,16 @@ public class AuthorServiceTest {
 
     @Test
     void should_find_and_return_author_by_name() {
-
         Author author = Author.builder()
                 .id(1L)
                 .name("Joanne K. Rowling")
                 .books(new HashSet<>())
                 .build();
 
-        AuthorCommand authorCommand = new AuthorCommand("Joanne K. Rowling");
-
         when(authorRepository.findAuthorByName(anyString())).thenReturn(Optional.of(author));
         AuthorDTO expectedDTO = new AuthorDTO("Joanne K. Rowling", null);
         when(mapper.toDTO(any())).thenReturn(expectedDTO);
-        AuthorDTO actualDTO = service.findAuthorByName(authorCommand);
+        AuthorDTO actualDTO = service.findAuthorByName("Joanne K. Rowling");
         assertEquals(expectedDTO, actualDTO);
 
         verify(authorRepository, times(1)).findAuthorByName(anyString());
@@ -99,10 +96,8 @@ public class AuthorServiceTest {
 
     @Test
     void should_not_find_author_by_name_that_doesnt_exists() {
-        AuthorCommand nonExistingAuthor = new AuthorCommand("Mikszáth Kálmán");
-
         when(authorRepository.findAuthorByName(anyString())).thenReturn(Optional.empty());
-        assertNull(service.findAuthorByName(nonExistingAuthor));
+        assertNull(service.findAuthorByName("Mikszáth Kálmán"));
 
         verify(authorRepository, times(1)).findAuthorByName(anyString());
         verifyNoMoreInteractions(authorRepository);
@@ -110,7 +105,6 @@ public class AuthorServiceTest {
 
     @Test
     void should_find_and_return_author_by_id() {
-
         Author author = Author.builder()
                 .id(1L)
                 .name("Joanne K. Rowling")

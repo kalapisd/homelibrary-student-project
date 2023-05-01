@@ -1,7 +1,6 @@
 package com.example.homelibrary.entity;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,35 +20,26 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "BOOKS")
+@Table(name = "books")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            name = "id",
-            updatable = false
-    )
     private Long id;
 
-    @Column(
-            name = "title",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
     private String title;
+
     private String subTitle;
 
     @ManyToMany(cascade =
             {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "Books_Authors",
+    @JoinTable(name = "books_authors",
             joinColumns = {
                     @JoinColumn(
                             name = "book_id",
@@ -77,21 +67,21 @@ public class Book {
 
     private String language;
 
-    public void addPiece() {
-        piece++;
-    }
-
     private int piece;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Book book)) return false;
-        return getTitle().equals(book.getTitle());
+    public void addPiece() {
+        piece++;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getTitle());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book book)) return false;
+        return getTitle().equals(book.getTitle()) && getAuthors().equals(book.getAuthors());
     }
 }

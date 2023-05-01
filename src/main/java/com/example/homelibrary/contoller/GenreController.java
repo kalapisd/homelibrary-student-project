@@ -10,17 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/genre")
-@Tag(name = "Here you can make operations on genre")
+@Tag(name = "Here you can make operations on genre.")
 public class GenreController {
 
-    private GenreService genreService;
+    private final GenreService genreService;
 
     @Autowired
     public GenreController(GenreService genreService) {
@@ -36,7 +35,7 @@ public class GenreController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Find genre by id",
-            description = "Here you can a genre by it's ID.")
+            description = "Here you can find a genre by it's ID.")
     public ResponseEntity<GenreDTO> findGenreById(
             @Parameter(description = "Id of the genre", example = "1")
             @PathVariable("id") long id){
@@ -45,14 +44,13 @@ public class GenreController {
 
     }
 
-    @GetMapping("/findbytype")
+    @GetMapping("/type/{genretype}")
     @Operation(summary = "Find genre by id",
-            description = "Here you can a genre by it's genretype .")
+            description = "Here you can find a genre by it's genre type.")
     public ResponseEntity<GenreDTO> findGenreByType(
             @Parameter(description = "genre type", example = "KIDS")
-            @RequestParam("genretype") String genretype){
-        GenreDTO genreDto = genreService.findGenreByGenreType(genretype);
+            @PathVariable("genretype") String genreType){
+        GenreDTO genreDto = genreService.findGenreByGenreType(genreType);
         return genreDto == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(genreDto);
     }
-
 }

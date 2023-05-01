@@ -84,7 +84,7 @@ public class AuthorIntegrationTest {
     void oneBookStored_getOneByName_shouldReturnCorrectAuthor() {
         restTemplate.postForObject(entityUrl, BACKMAN, AuthorDTO.class);
         String name = BACKMAN.getName();
-        final ResponseEntity<AuthorDTO> response = restTemplate.getForEntity(entityUrl + "/findbyname/" + name, AuthorDTO.class);
+        final ResponseEntity<AuthorDTO> response = restTemplate.getForEntity(entityUrl + "/name/" + name, AuthorDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(BACKMAN.getName(), Objects.requireNonNull(response.getBody()).getName());
     }
@@ -102,13 +102,13 @@ public class AuthorIntegrationTest {
     }
 
     @Test
-    void getBooksOfAuthor_shouldOnlyReturn_BooksOfGivenAuthor() {
+    void getBooksOfAuthor_shouldOnlyReturn_booksOfGivenAuthor() {
         String postURL = "http://localhost:" + port + "/books/manually";
         List<BookCommand> testData = List.of(HARRY_POTTER, TANCISKOLA, VERA, AAT);
         testData.forEach(book -> restTemplate.postForObject(postURL, book, BookDTO.class));
-        String name = "Grecsó Krisztián";
-        String getBooksURL = entityUrl + "/books?name=" + name;
-        ResponseEntity<List<BookDTO>> response = restTemplate.exchange(getBooksURL,
+        String author = "Grecsó Krisztián";
+        String booksURL = entityUrl + "/books?author=" + author;
+        ResponseEntity<List<BookDTO>> response = restTemplate.exchange(booksURL,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {
@@ -122,6 +122,6 @@ public class AuthorIntegrationTest {
                 .toList();
 
         assertEquals(1, authorNames.size());
-        assertEquals(name, authorNames.get(0));
+        assertEquals(author, authorNames.get(0));
     }
 }

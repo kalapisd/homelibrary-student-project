@@ -24,7 +24,7 @@ public class BookDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BookDTO bookDTO)) return false;
-        return Objects.equals(getTitle(), bookDTO.getTitle());
+        return getTitle().equals(bookDTO.getTitle()) && getAuthors().equals(bookDTO.getAuthors());
     }
 
     @Override

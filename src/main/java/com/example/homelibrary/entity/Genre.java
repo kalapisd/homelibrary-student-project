@@ -21,14 +21,13 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "GENRE")
+@Table(name = "genre")
 public class Genre {
 
     @Id
@@ -49,11 +48,6 @@ public class Genre {
     @JsonIgnore
     public Set<Book> getBooksOfGenre() {
         return booksOfGenre;
-    }
-
-    public Genre(GenreType genreType) {
-        this.genreType = genreType;
-        this.booksOfGenre = new HashSet<>();
     }
 
     public void addBook(Book book) {

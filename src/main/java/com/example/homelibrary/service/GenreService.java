@@ -15,11 +15,11 @@ import java.util.Optional;
 
 @Service
 public class GenreService {
-    private GenreRepository genreRepository;
-    private GenreMapper mapper;
 
-    private Logger logger = LoggerFactory.getLogger(AuthorService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthorService.class);
 
+    private final GenreRepository genreRepository;
+    private final GenreMapper mapper;
 
     @Autowired
     public GenreService(GenreRepository genreRepository, GenreMapper mapper) {
@@ -51,7 +51,7 @@ public class GenreService {
         if (genre.isPresent()) {
             return mapper.toDTO(genre.get());
         } else {
-            logger.info("No such genre was found with id: {}!", genreType);
+            logger.info("No such genre was found with genre type: {}!", genreType);
             return null;
         }
     }
@@ -59,5 +59,4 @@ public class GenreService {
     public void save(Genre genre) {
         genreRepository.save(genre);
     }
-
 }

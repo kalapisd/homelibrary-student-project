@@ -28,7 +28,7 @@ import java.util.List;
 @Tag(name = "Here you can make operations on books")
 public class BookController {
 
-    private BookService bookService;
+    private final BookService bookService;
 
     @Autowired
     public BookController(BookService bookService) {
@@ -52,7 +52,7 @@ public class BookController {
         return bookDTO == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(bookDTO);
     }
 
-    @GetMapping("/findbytitle/{title}")
+    @GetMapping("/title/{title}")
     @Operation(summary = "Find book by title",
             description = "Here you can find a book by it's title.")
     public ResponseEntity<BookDTO> findBookByTitle(
@@ -71,8 +71,8 @@ public class BookController {
     }
 
     @PostMapping("/fromAPI")
-    @Operation(summary = "Save book using GOOGLE API data",
-            description = "Here you can save book to database by getting book data from Google books API.")
+    @Operation(summary = "Save book using Google Books API data",
+            description = "Here you can save book to database by getting book data from Google Books API. The API command parameter must be one of: isbn, intitle, inauthor, intitle_inauthor.")
     public ResponseEntity<BookDTO> saveFromApiData(@RequestBody @Valid APICommand command, BindingResult errors) {
         if (errors.hasErrors()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(bookService.saveBookFomAPiDATA(command));
@@ -118,5 +118,4 @@ public class BookController {
             @RequestParam("genre") String genre) {
         bookService.addGenreToBook(bookId, genre);
     }
-
 }

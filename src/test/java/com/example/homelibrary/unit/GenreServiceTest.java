@@ -1,5 +1,6 @@
 package com.example.homelibrary.unit;
 
+import com.example.homelibrary.DTO.BookDTO;
 import com.example.homelibrary.DTO.GenreDTO;
 import com.example.homelibrary.entity.Book;
 import com.example.homelibrary.entity.Genre;
@@ -45,8 +46,8 @@ public class GenreServiceTest {
         setUpDatabaseForFindAll();
 
         List<GenreDTO> expectedDTOs = List.of(
-                new GenreDTO("KIDS", List.of("Joanne K. Rowling")),
-                new GenreDTO("SCI_FI", List.of("Frank Herbert"))
+                new GenreDTO("KIDS", List.of(new BookDTO("Harry Potter", List.of("Joanne K. Rowling"), "KIDS"))),
+                new GenreDTO("SCI_FI", List.of(new BookDTO("Düne", List.of("Frank Herbert"), "SCI_FI")))
         );
 
         List<GenreDTO> actualDTOs = service.findAllGenre();
@@ -77,7 +78,7 @@ public class GenreServiceTest {
         genre.setBooksOfGenre(new HashSet<>(List.of(book)));
 
         when(genreRepository.findById(anyLong())).thenReturn(Optional.of(genre));
-        GenreDTO expectedDTO = new GenreDTO("KIDS", List.of("Joanne K. Rowling"));
+        GenreDTO expectedDTO = new GenreDTO("KIDS", List.of(new BookDTO("Harry Potter", List.of("Joanne K. Rowling"), "KIDS")));
         when(mapper.toDTO(any())).thenReturn(expectedDTO);
         GenreDTO actualDTO = service.findGenreById(1L);
         assertEquals(expectedDTO, actualDTO);
@@ -116,7 +117,7 @@ public class GenreServiceTest {
         genre.setBooksOfGenre(new HashSet<>(List.of(book)));
 
         when(genreRepository.findByGenreType(any())).thenReturn(Optional.of(genre));
-        GenreDTO expectedDTO = new GenreDTO("KIDS", List.of("Joanne K. Rowling"));
+        GenreDTO expectedDTO = new GenreDTO("KIDS", List.of(new BookDTO("Harry Potter", List.of("Joanne K. Rowling"), "KIDS")));
         when(mapper.toDTO(any())).thenReturn(expectedDTO);
         GenreDTO actualDTO = service.findGenreByGenreType("KIDS");
         assertEquals(expectedDTO, actualDTO);
@@ -125,14 +126,12 @@ public class GenreServiceTest {
         verifyNoMoreInteractions(genreRepository);
     }
 
-
     private void setUpDatabaseForFindAll() {
-
         Genre genre1 = new Genre(1L, GenreType.KIDS, null);
         Genre genre2 = new Genre(1L, GenreType.SCI_FI, null);
 
-        GenreDTO genreDTO1 = new GenreDTO("KIDS", List.of("Joanne K. Rowling"));
-        GenreDTO genreDTO2 = new GenreDTO("SCI_FI", List.of("Frank Herbert"));
+        GenreDTO genreDTO1 = new GenreDTO("KIDS", List.of(new BookDTO("Harry Potter", List.of("Joanne K. Rowling"), "KIDS")));
+        GenreDTO genreDTO2 = new GenreDTO("SCI_FI", List.of(new BookDTO("Düne", List.of("Frank Herbert"), "SCI_FI")));
 
         when(genreRepository.findAll()).thenReturn(List.of(genre1, genre2));
         when(mapper.toDTO(genre1)).thenReturn(genreDTO1);

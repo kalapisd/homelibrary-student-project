@@ -7,7 +7,6 @@ create table authors
     primary key (id)
 );
 
-
 create table books
 (
     id             bigserial not null,

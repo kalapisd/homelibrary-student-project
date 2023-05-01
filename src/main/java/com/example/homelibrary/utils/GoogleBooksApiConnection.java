@@ -33,11 +33,11 @@ public class GoogleBooksApiConnection {
         String value = apiCommand.getValue();
 
         String query = switch (parameter) {
-            case "ISBN" -> "isbn:" + value;
-            case "inTitle" -> "intitle:" + value;
-            case "inAuthor" -> "inauthor:" + value;
-            case "inTitle_inAuthor" -> "intitle:" + value.split("_")[0] + "+inauthor:" + value.split("_")[1];
-            default -> throw new IllegalStateException("Unexpected value: " + parameter);
+            case "isbn" -> "isbn:" + value;
+            case "intitle" -> "intitle:" + value;
+            case "inauthor" -> "inauthor:" + value;
+            case "intitle_inauthor" -> "intitle:" + value.split("_")[0] + "+inauthor:" + value.split("_")[1];
+            default -> throw new IllegalArgumentException("Unexpected value: " + parameter);
         };
 
         BookResponse bookResponse = restTemplate.getForObject(

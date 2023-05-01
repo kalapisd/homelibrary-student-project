@@ -23,14 +23,13 @@ import java.util.Set;
 @Service
 public class BookService {
 
-    private GoogleBooksApiConnection apiConnection;
-    private BookRepository bookRepository;
-    private AuthorService authorService;
-    private GenreService genreService;
-    private BookMapper mapper;
+    private static final Logger logger = LoggerFactory.getLogger(BookService.class);
 
-    private Logger logger = LoggerFactory.getLogger(BookService.class);
-
+    private final GoogleBooksApiConnection apiConnection;
+    private final BookRepository bookRepository;
+    private final AuthorService authorService;
+    private final GenreService genreService;
+    private final BookMapper mapper;
 
     public BookService(GoogleBooksApiConnection apiConnection, BookRepository bookRepository, AuthorService authorService, GenreService genreService, BookMapper mapper) {
         this.apiConnection = apiConnection;
@@ -41,7 +40,7 @@ public class BookService {
     }
 
     public List<BookDTO> findAllBooks() {
-        return bookRepository.findAll().stream().map(book -> mapper.toDTO(book)).toList();
+        return bookRepository.findAll().stream().map(mapper::toDTO).toList();
     }
 
     public BookDTO findBookById(long id) {
@@ -185,12 +184,11 @@ public class BookService {
 
     private void deleteBookFromAuthors(List<Author> authors, Book book) {
         authors.forEach(author -> author.removeBook(book));
-        authors.forEach(author -> authorService.saveAuthor(author));
+        authors.forEach(authorService::saveAuthor);
     }
 
     private void deleteBookFromGenre(Genre genre, Book book) {
         genre.removeBook(book);
         genreService.save(genre);
     }
-
 }

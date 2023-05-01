@@ -30,7 +30,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.example.homelibrary.data.TestApiCommand.APIQUERY;
+import static com.example.homelibrary.data.TestApiCommand.APIQUERY2;
 import static com.example.homelibrary.data.TestAuthorCommand.BACKMAN;
+import static com.example.homelibrary.data.TestAuthorCommand.HARUKI;
 import static com.example.homelibrary.data.TestBookCommand.AAT;
 import static com.example.homelibrary.data.TestBookCommand.ELETED_UZLETE;
 import static com.example.homelibrary.data.TestBookCommand.HARRY_POTTER;
@@ -86,7 +88,7 @@ public class BookIntegrationTest {
         String title = HARRY_POTTER.getTitle();
         String postURL = entityUrl + "/manually";
         restTemplate.postForObject(postURL, HARRY_POTTER, BookDTO.class);
-        final ResponseEntity<BookDTO> response = restTemplate.getForEntity(entityUrl + "/findbytitle/" + title, BookDTO.class);
+        final ResponseEntity<BookDTO> response = restTemplate.getForEntity(entityUrl + "/title/" + title, BookDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(HARRY_POTTER.getTitle(), Objects.requireNonNull(response.getBody()).getTitle());
     }
@@ -169,13 +171,13 @@ public class BookIntegrationTest {
 
     @Test
     void addAuthorToBook_shouldAddAuthor() {
-        String postURL = entityUrl + "/manually";
-        restTemplate.postForObject(postURL, ELETED_UZLETE, BookDTO.class);
+        String postURL = entityUrl + "/fromAPI";
+        restTemplate.postForObject(postURL, APIQUERY2, BookDTO.class);
         String bookId = "1";
 
         String postAuthor = baseUrl + "/authors";
-        restTemplate.postForObject(postAuthor, BACKMAN, AuthorDTO.class);
-        String name = BACKMAN.getName();
+        restTemplate.postForObject(postAuthor, HARUKI, AuthorDTO.class);
+        String name = HARUKI.getName();
 
         String addAuthorUrl = entityUrl + "/addauthor";
         addAuthorToBook(addAuthorUrl, bookId, name);
@@ -183,13 +185,13 @@ public class BookIntegrationTest {
         final ResponseEntity<BookDTO> response = restTemplate.getForEntity(entityUrl + "/" + bookId, BookDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        assertEquals(BACKMAN.getName(), Objects.requireNonNull(response.getBody()).getAuthors().get(0));
+        assertEquals(HARUKI.getName(), Objects.requireNonNull(response.getBody()).getAuthors().get(0));
     }
 
     @Test
     void addGenreToBook_shouldAddGenre() {
-        String postURL = entityUrl + "/manually";
-        restTemplate.postForObject(postURL, TANCISKOLA, BookDTO.class);
+        String postURL = entityUrl + "/fromAPI";
+        restTemplate.postForObject(postURL, APIQUERY2, BookDTO.class);
         String bookId = "1";
 
         String addGenreUrl = entityUrl + "/addgenre";

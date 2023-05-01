@@ -26,8 +26,8 @@ import java.util.List;
 @Tag(name = "Here you can make operations on authors")
 public class AuthorController {
 
-    private AuthorService authorService;
-    private BookService bookService;
+    private final AuthorService authorService;
+    private final BookService bookService;
 
     public AuthorController(AuthorService authorService, BookService bookService) {
         this.authorService = authorService;
@@ -44,17 +44,17 @@ public class AuthorController {
     @GetMapping("/books")
     @Operation(summary = "Find all books of author",
             description = "Here you can get all books of an author of interest.")
-    private List<BookDTO> getBooksOfAuthor(@RequestParam("name") String name) {
-        return bookService.findAllBooksOfAuthor(name);
+    private List<BookDTO> getBooksOfAuthor(@RequestParam("author") String author) {
+        return bookService.findAllBooksOfAuthor(author);
     }
 
-    @GetMapping("/findbyname/{name}")
+    @GetMapping("/name/{author}")
     @Operation(summary = "Find author by name",
             description = "Here you can find an author by it's name.")
     public ResponseEntity<AuthorDTO> findAuthorByName(
             @Parameter(description = "Name of the author", example = "George Orwell")
-            @PathVariable("name") AuthorCommand command) {
-        AuthorDTO authorDTO = authorService.findAuthorByName(command);
+            @PathVariable("author") String author) {
+        AuthorDTO authorDTO = authorService.findAuthorByName(author);
         return authorDTO == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(authorDTO);
     }
 
@@ -67,6 +67,7 @@ public class AuthorController {
         AuthorDTO authorDTO = authorService.findAuthorById(id);
         return authorDTO == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(authorDTO);
     }
+
     @PostMapping
     @Operation(summary = "Save an author",
             description = "Here you can save an author by giving it's name to the database.")
@@ -75,5 +76,4 @@ public class AuthorController {
         if (errors.hasErrors()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(authorService.saveAuthorByName(authorCommand));
     }
-
 }

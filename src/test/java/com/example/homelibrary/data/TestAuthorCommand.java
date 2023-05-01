@@ -8,4 +8,5 @@ public interface TestAuthorCommand {
     AuthorCommand GRECSO = new AuthorCommand("Grecsó Krisztián");
     AuthorCommand FINE = new AuthorCommand("Aubrey H. Fine");
     AuthorCommand ROWLING = new AuthorCommand("Joanne K. Rowling");
+    AuthorCommand HARUKI = new AuthorCommand("Murakami Haruki");
 }
