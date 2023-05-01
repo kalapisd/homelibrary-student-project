@@ -1,6 +1,5 @@
 package com.example.homelibrary.DTO.commands;
 
-import com.example.homelibrary.entity.Genre;
 import com.example.homelibrary.utils.validator.ValidPublishDate;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

@@ -1,7 +1,7 @@
 package com.example.homelibrary.integration;
 
-import com.example.homelibrary.testmodels.GenreDTO;
-import com.example.homelibrary.testmodels.GenreType;
+import com.example.homelibrary.DTO.GenreDTO;
+import com.example.homelibrary.entity.GenreType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@TestPropertySource("/application-test.properties")
+@TestPropertySource("/application.properties")
 public class GenreIntegrationTest {
 
     @Autowired
@@ -34,11 +34,9 @@ public class GenreIntegrationTest {
 
     private String entityUrl;
 
-    private String baseUrl;
-
     @BeforeEach
     void setUp() {
-        baseUrl = "http://localhost:" + port;
+        String baseUrl = "http://localhost:" + port;
         entityUrl = baseUrl + "/genre";
     }
 
@@ -52,6 +50,7 @@ public class GenreIntegrationTest {
                 new ParameterizedTypeReference<>() {
                 });
         List<GenreDTO> genre = response.getBody();
+        assert genre != null;
         List<String> actualGenres = genre.stream().map(GenreDTO::getGenre).toList();
         assertTrue(expectedGenres.size() == actualGenres.size() && expectedGenres.containsAll(actualGenres) && actualGenres.containsAll(expectedGenres));
     }

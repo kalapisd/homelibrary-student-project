@@ -1,6 +1,6 @@
 package com.example.homelibrary.data;
 
-import com.example.homelibrary.testmodels.APICommand;
+import com.example.homelibrary.DTO.commands.APICommand;
 
 public interface TestApiCommand {
 

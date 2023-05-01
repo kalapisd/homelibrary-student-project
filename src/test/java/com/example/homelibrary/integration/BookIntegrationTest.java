@@ -1,9 +1,9 @@
 package com.example.homelibrary.integration;
 
-import com.example.homelibrary.testmodels.AuthorDTO;
-import com.example.homelibrary.testmodels.BookCommand;
-import com.example.homelibrary.testmodels.BookDTO;
-import com.example.homelibrary.testmodels.GenreType;
+import com.example.homelibrary.DTO.AuthorDTO;
+import com.example.homelibrary.DTO.BookDTO;
+import com.example.homelibrary.DTO.commands.BookCommand;
+import com.example.homelibrary.entity.GenreType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +40,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@TestPropertySource("/application-test.properties")
-public class BookIntegrationTests {
+@TestPropertySource("/application.properties")
+public class BookIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -61,7 +61,6 @@ public class BookIntegrationTests {
 
     @Test
     void emptyDatabase_getAll_shouldReturnEmptyList() {
-
         ResponseEntity<List<BookDTO>> response = restTemplate.exchange(entityUrl,
                 HttpMethod.GET,
                 null,
@@ -80,7 +79,6 @@ public class BookIntegrationTests {
         final ResponseEntity<BookDTO> response = restTemplate.getForEntity(entityUrl + "/" + id, BookDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(HARRY_POTTER.getTitle(), Objects.requireNonNull(response.getBody()).getTitle());
-
     }
 
     @Test
@@ -91,7 +89,6 @@ public class BookIntegrationTests {
         final ResponseEntity<BookDTO> response = restTemplate.getForEntity(entityUrl + "/findbytitle/" + title, BookDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(HARRY_POTTER.getTitle(), Objects.requireNonNull(response.getBody()).getTitle());
-
     }
 
     @Test
@@ -167,7 +164,7 @@ public class BookIntegrationTests {
         long idToUpdate = 1L;
         String updateURL = entityUrl + "/" + idToUpdate;
         ResponseEntity<BookDTO> updatedBook = updateBook(updateURL, update);
-        assertEquals(update.getTitle(), updatedBook.getBody().getTitle());
+        assertEquals(update.getTitle(), Objects.requireNonNull(updatedBook.getBody()).getTitle());
     }
 
     @Test
@@ -243,5 +240,4 @@ public class BookIntegrationTests {
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new HttpEntity<>(command, headers);
     }
-
 }

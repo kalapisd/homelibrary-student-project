@@ -13,12 +13,12 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class GoogleBooksApiConnection {
 
-    @Value("AIzaSyAjER9gZjSb_YnJHsVNhl1fDWRK9y_o88g")
+    @Value("${google.books.api.key}")
     private String apiKey;
 
-    private BookMapper mapper;
+    private final BookMapper mapper;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate = new RestTemplate();
 
     static final Logger log = LoggerFactory.getLogger(GoogleBooksApiConnection.class);
 
@@ -40,7 +40,6 @@ public class GoogleBooksApiConnection {
             default -> throw new IllegalStateException("Unexpected value: " + parameter);
         };
 
-
         BookResponse bookResponse = restTemplate.getForObject(
                 "https://www.googleapis.com/books/v1/volumes?q=" + query + "&key=" + apiKey, BookResponse.class);
 
@@ -48,7 +47,5 @@ public class GoogleBooksApiConnection {
         BookCommand command = mapper.toCommand(info);
         log.info(command.toString());
         return command;
-
     }
-
 }

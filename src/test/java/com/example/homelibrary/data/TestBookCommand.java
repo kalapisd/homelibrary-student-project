@@ -1,6 +1,6 @@
 package com.example.homelibrary.data;
 
-import com.example.homelibrary.testmodels.BookCommand;
+import com.example.homelibrary.DTO.commands.BookCommand;
 
 import java.util.ArrayList;
 import java.util.List;
