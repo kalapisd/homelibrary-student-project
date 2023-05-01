@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static com.example.homelibrary.data.TestApiCommand.APIQUERY;
 import static com.example.homelibrary.data.TestApiCommand.APIQUERY2;
-import static com.example.homelibrary.data.TestAuthorCommand.BACKMAN;
 import static com.example.homelibrary.data.TestAuthorCommand.HARUKI;
 import static com.example.homelibrary.data.TestBookCommand.AAT;
 import static com.example.homelibrary.data.TestBookCommand.ELETED_UZLETE;

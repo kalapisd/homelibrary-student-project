@@ -128,7 +128,6 @@ public class AuthorServiceTest {
 
         verify(authorRepository, times(1)).findById(anyLong());
         verifyNoMoreInteractions(authorRepository);
-
     }
 
     @Test
