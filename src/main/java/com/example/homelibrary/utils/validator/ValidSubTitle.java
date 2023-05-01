@@ -10,11 +10,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = PublishDateValidator.class)
+@Constraint(validatedBy = SubTitleValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidPublishDate {
-    String message() default "Book publish year must be valid!";
+public @interface ValidSubTitle {
+    String message() default "Subtitle must be valid";
 
     Class<?>[] groups() default {};
 

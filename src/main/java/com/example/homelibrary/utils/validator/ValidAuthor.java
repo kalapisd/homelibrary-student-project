@@ -10,11 +10,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = PublishDateValidator.class)
+@Constraint(validatedBy = AuthorValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidPublishDate {
-    String message() default "Book publish year must be valid!";
+public @interface ValidAuthor {
+    String message() default "Author name must be valid";
 
     Class<?>[] groups() default {};
 
