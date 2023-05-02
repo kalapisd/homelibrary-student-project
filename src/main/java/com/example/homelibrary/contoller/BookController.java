@@ -52,6 +52,16 @@ public class BookController {
         return bookDTO == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(bookDTO);
     }
 
+    @GetMapping("/copies/{title}")
+    @Operation(summary = "Get the number of copies of a book",
+            description = "Here you can get the number of copies of a book by it's title.")
+    public ResponseEntity<Integer> getNumberOfCopies(
+            @Parameter(description = "Title of the book", example = "A Gyűrűk Ura")
+            @PathVariable("title") String title) {
+        Integer copies = bookService.getNumberOfCopies(title);
+        return copies == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(copies);
+    }
+
     @GetMapping("/title/{title}")
     @Operation(summary = "Find book by title",
             description = "Here you can find a book by it's title.")

@@ -40,7 +40,11 @@ public class BookService {
     }
 
     public List<BookDTO> findAllBooks() {
-        return bookRepository.findAll().stream().map(mapper::toDTO).toList();
+        return bookRepository.findAll()
+                .stream()
+                .map(mapper::toDTO)
+                .sorted()
+                .toList();
     }
 
     public BookDTO findBookById(long id) {
@@ -57,6 +61,16 @@ public class BookService {
         Optional<Book> book = bookRepository.findByTitle(title);
         if (book.isPresent()) {
             return mapper.toDTO(book.get());
+        } else {
+            logger.info("No such book was found with title: {}!", title);
+            return null;
+        }
+    }
+
+    public Integer getNumberOfCopies(String title) {
+        Optional<Book> book = bookRepository.findByTitle(title);
+        if (book.isPresent()) {
+            return book.get().getPiece();
         } else {
             logger.info("No such book was found with title: {}!", title);
             return null;
