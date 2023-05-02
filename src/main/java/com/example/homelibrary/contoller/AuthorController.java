@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,7 +61,7 @@ public class AuthorController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Find author by id",
-            description = "Here you can find an author by it's ID.")
+            description = "Here you can find an author by it's id.")
     public ResponseEntity<AuthorDTO> findAuthorById(
             @Parameter(description = "Id of the author", example = "1")
             @PathVariable("id") Long id) {
@@ -71,9 +72,18 @@ public class AuthorController {
     @PostMapping
     @Operation(summary = "Save an author",
             description = "Here you can save an author by giving it's name to the database.")
-    public  ResponseEntity<AuthorDTO> saveAuthor(
+    public ResponseEntity<AuthorDTO> saveAuthor(
             @RequestBody @Valid AuthorCommand authorCommand, BindingResult errors) {
         if (errors.hasErrors()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(authorService.saveAuthorByName(authorCommand));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete author from database",
+            description = "Here you can delete an author from the database by giving its ID You only can delete an author, if there is no book stored with this author.")
+    public void delete(
+            @Parameter(description = "Id of the author", example = "1")
+            @PathVariable("id") Long id) {
+        authorService.deleteAuthor(id);
     }
 }

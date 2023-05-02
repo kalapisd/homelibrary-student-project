@@ -1,10 +1,11 @@
 package com.example.homelibrary.service;
 
-import com.example.homelibrary.DTO.commands.AuthorCommand;
 import com.example.homelibrary.DTO.AuthorDTO;
+import com.example.homelibrary.DTO.commands.AuthorCommand;
 import com.example.homelibrary.entity.Author;
 import com.example.homelibrary.mapper.AuthorMapper;
 import com.example.homelibrary.repository.AuthorRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class AuthorService {
     }
 
     public List<AuthorDTO> findAllAuthors() {
-        return authorRepository.findAll().stream().map(author -> mapper.toDTO(author)).toList();
+        return authorRepository.findAll().stream().map(mapper::toDTO).toList();
     }
 
     public Set<Author> getAuthorsToSaveBook(List<String> authorNames) {
@@ -82,6 +83,19 @@ public class AuthorService {
         return mapper.toDTO(authorRepository.save(author));
     }
 
+    @Transactional
+    public void deleteAuthor(Long id) {
+        Optional<Author> author = authorRepository.findById(id);
 
+        int deletedRows = 0;
+        if (author.isPresent() && author.get().getBooks().isEmpty()) {
+            deletedRows = authorRepository.deleteAuthorById(id);
+        }
 
+        if (deletedRows == 0) {
+            logger.info("Author not found with id: {} or cannot be deleted", id);
+        } else {
+            logger.info("Author with id: {} is deleted!", id);
+        }
+    }
 }
