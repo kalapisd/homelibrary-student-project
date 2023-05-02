@@ -38,19 +38,23 @@ public class GenreController {
             description = "Here you can find a genre by it's ID.")
     public ResponseEntity<GenreDTO> findGenreById(
             @Parameter(description = "Id of the genre", example = "1")
-            @PathVariable("id") long id){
+            @PathVariable("id") long id) {
         GenreDTO genreDto = genreService.findGenreById(id);
         return genreDto == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(genreDto);
 
     }
 
     @GetMapping("/type/{genretype}")
-    @Operation(summary = "Find genre by id",
+    @Operation(summary = "Find genre by type",
             description = "Here you can find a genre by it's genre type.")
     public ResponseEntity<GenreDTO> findGenreByType(
             @Parameter(description = "genre type", example = "KIDS")
-            @PathVariable("genretype") String genreType){
-        GenreDTO genreDto = genreService.findGenreByGenreType(genreType);
-        return genreDto == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(genreDto);
+            @PathVariable("genretype") String genreType) {
+        try {
+            GenreDTO genreDto = genreService.findGenreByGenreType(genreType);
+            return ResponseEntity.ok(genreDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
