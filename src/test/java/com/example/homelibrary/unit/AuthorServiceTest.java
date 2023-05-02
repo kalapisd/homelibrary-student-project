@@ -55,7 +55,6 @@ public class AuthorServiceTest {
         assertThat(service.findAllAuthors()).hasSize(0);
         verify(authorRepository, times(1)).findAll();
         verifyNoMoreInteractions(authorRepository);
-
     }
 
     @Test
@@ -157,7 +156,6 @@ public class AuthorServiceTest {
                 .getName());
         assertEquals("Stephen King", allAuthors.get(1)
                 .getName());
-
     }
 
     @Test
@@ -185,7 +183,6 @@ public class AuthorServiceTest {
         assertEquals(expectedSavedAuthor.getName(),authorToSave.getName());
         verify(authorRepository, times(1)).save(any());
         verifyNoMoreInteractions(authorRepository);
-
     }
 
     private void setUpDatabaseForFindAll() {
@@ -209,5 +206,4 @@ public class AuthorServiceTest {
         when(mapper.toDTO(author1)).thenReturn(authorDTO1);
         when(mapper.toDTO(author2)).thenReturn(authorDTO2);
     }
-
 }

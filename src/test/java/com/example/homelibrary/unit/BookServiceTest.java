@@ -71,7 +71,6 @@ public class BookServiceTest {
         assertThat(service.findAllBooks()).hasSize(0);
         verify(bookRepository, times(1)).findAll();
         verifyNoMoreInteractions(bookRepository);
-
     }
 
     @Test
@@ -137,13 +136,12 @@ public class BookServiceTest {
     }
 
     @Test
-    void should_not_found_book_by_id_that_doesnt_exists() {
+    void should_not_find_book_by_id_that_doesnt_exists() {
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
         assertNull(service.findBookById(1L));
 
         verify(bookRepository, times(1)).findById(anyLong());
         verifyNoMoreInteractions(bookRepository);
-
     }
 
     @Test
@@ -173,7 +171,7 @@ public class BookServiceTest {
 
 
     @Test
-    void should_not_found_book_by_title_that_doesnt_exists() {
+    void should_not_find_book_by_title_that_doesnt_exists() {
         String nonExistingTitle = "Biblia";
 
         when(bookRepository.findByTitle(anyString())).thenReturn(Optional.empty());
@@ -181,7 +179,6 @@ public class BookServiceTest {
 
         verify(bookRepository, times(1)).findByTitle(anyString());
         verifyNoMoreInteractions(bookRepository);
-
     }
 
     @Test
@@ -240,7 +237,6 @@ public class BookServiceTest {
 
         verify(bookRepository, times(1)).save(book);
         assertEquals(expectedName, actualName);
-
     }
 
     @Test
@@ -262,7 +258,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void delete_book_with_correctId_should_remove_it_from_authors() {
+    void when_only_one_copy_presents_delete_book_with_correctId_should_remove_it_from_authors() {
 
         Book book = buildOneBook();
 
@@ -276,6 +272,28 @@ public class BookServiceTest {
         int numOfBooksOfAuthorAfterDelete = author.getBooks().size();
         assertEquals(numOfBooksOfAuthor - 1, numOfBooksOfAuthorAfterDelete);
         verify(bookRepository, times(1)).deleteBooksById(anyLong());
+        verifyNoMoreInteractions(bookRepository);
+    }
+
+    @Test
+    void when_only_multiple_copes_present_delete_book_with_correctId_should_decrease_copynumber() {
+
+        Book book = buildBookWithTwoCopies();
+
+        Author author = book.getAuthors().iterator().next();
+        int numOfBooksOfAuthor = author.getBooks().size();
+        when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
+        when(bookRepository.save(bookArgumentCaptor.capture())).thenAnswer(a -> a.getArgument(0));
+
+        service.deleteBook(1L);
+
+        int numOfBooksOfAuthorAfterDelete = author.getBooks().size();
+        assertEquals(numOfBooksOfAuthor, numOfBooksOfAuthorAfterDelete);
+
+        int pieceNUmber = author.getBooks().stream().map(Book::getPiece).toList().get(0);
+        assertEquals(1,pieceNUmber);
+
+        verify(bookRepository, times(1)).save(any());
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -365,7 +383,6 @@ public class BookServiceTest {
         when(bookRepository.findAll()).thenReturn(List.of(book1, book2));
         when(mapper.toDTO(book1)).thenReturn(bookDTO1);
         when(mapper.toDTO(book2)).thenReturn(bookDTO2);
-
     }
 
     private void setUpDatabaseForBooksOfAuthor() {
@@ -398,7 +415,6 @@ public class BookServiceTest {
         when(bookRepository.findAllByAuthors_Name(any())).thenReturn(List.of(book1, book2));
         when(mapper.toDTO(book1)).thenReturn(bookDTO1);
         when(mapper.toDTO(book2)).thenReturn(bookDTO2);
-
     }
 
 
@@ -432,7 +448,37 @@ public class BookServiceTest {
         kids.getBooksOfGenre().forEach(book -> book.setGenre(kids));
 
         return book1;
-
     }
 
+    private Book buildBookWithTwoCopies() {
+        Book book1 = Book.builder()
+                .id(1L)
+                .title("Harry Potter és a Bölcsek Köve")
+                .subTitle(null)
+                .authors(new HashSet<>())
+                .genre(null)
+                .publishedYear(2000)
+                .numOfPages(316)
+                .piece(2)
+                .build();
+
+        Author author = Author.builder()
+                .id(1L)
+                .name("Joanne K. Rowling")
+                .books(new HashSet<>(List.of(book1)))
+                .build();
+
+        book1.setAuthors(new HashSet<>(List.of(author)));
+
+        Genre kids = Genre.builder()
+                .id(1L)
+                .genreType(GenreType.KIDS)
+                .booksOfGenre(new HashSet<>(List.of(book1)))
+                .build();
+
+        book1.setGenre(kids);
+        kids.getBooksOfGenre().forEach(book -> book.setGenre(kids));
+
+        return book1;
+    }
 }
