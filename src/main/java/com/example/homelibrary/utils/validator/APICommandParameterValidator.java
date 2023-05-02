@@ -14,4 +14,6 @@ public class APICommandParameterValidator implements ConstraintValidator<ValidAP
         return value.equals("isbn") || value.equals("intitle") ||
                 value.equals("inauthor") || value.equals("intitle_inauthor");
     }
+
+
 }

@@ -11,6 +11,6 @@ public class TitleValidator implements ConstraintValidator<ValidTitle, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return value.matches("^(?:[\\p{L}\\p{Mn}\\p{Pd}0-9;:!?.,()'-]+\\s?)+$");
+        return value.matches("^(?:[\\p{L}\\p{Mn}\\p{Pd}0-9;:!?.,()']+\\s?)+$");
     }
 }

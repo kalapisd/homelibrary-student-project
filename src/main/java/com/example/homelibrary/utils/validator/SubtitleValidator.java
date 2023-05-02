@@ -3,7 +3,7 @@ package com.example.homelibrary.utils.validator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class SubTitleValidator implements ConstraintValidator<ValidSubTitle, String> {
+public class SubtitleValidator implements ConstraintValidator<ValidSubTitle, String> {
 
     @Override
     public void initialize(ValidSubTitle constraintAnnotation) {

@@ -11,6 +11,6 @@ public class AuthorValidator implements ConstraintValidator<ValidAuthor, String>
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return value.matches("^(?:[\\p{L}\\p{Mn}\\p{Pd}.'-]+\\s?)+$");
+        return value.matches("^(?:[\\p{L}\\p{Mn}\\p{Pd}.']+\\s?)+$");
     }
 }
