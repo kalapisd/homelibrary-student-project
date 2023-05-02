@@ -22,8 +22,19 @@ public class SubtitleValidatorTest {
     }
 
     @Test
-    void whenInvalidTitleAdded_ReturnsFalse() {
+    void whenInvalidSubTitleAdded_ReturnsFalse() {
         String inValidSubtitle = "*";
         assertFalse(subTitleValidator.isValid(inValidSubtitle, constraintValidatorContext));
+    }
+
+    @Test
+    void whenNoSubTitleAdded_ReturnsTrue() {
+        assertTrue(subTitleValidator.isValid(null, constraintValidatorContext));
+    }
+
+    @Test
+    void whenEmptySubTitleAdded_ReturnsTrue() {
+        String validSubtitle = "";
+        assertTrue(subTitleValidator.isValid(validSubtitle, constraintValidatorContext));
     }
 }
