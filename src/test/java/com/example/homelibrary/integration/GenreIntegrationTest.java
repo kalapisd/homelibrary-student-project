@@ -65,6 +65,13 @@ public class GenreIntegrationTest {
     }
 
     @Test
+    void databaseFilledWithSQL_getOneByNonExistingId_shouldReturnNotFound() {
+        long id = 20L;
+        final ResponseEntity<GenreDTO> response = restTemplate.getForEntity(entityUrl + "/" + id, GenreDTO.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
     void databaseFilledWithSQL_getOneByType_shouldReturnCorrectGenre() {
         String genreURL = entityUrl + "/type/" + GenreType.KIDS.name();
         final ResponseEntity<GenreDTO> response = restTemplate.getForEntity(genreURL, GenreDTO.class);
@@ -72,4 +79,10 @@ public class GenreIntegrationTest {
         assertEquals(String.valueOf(GenreType.KIDS), Objects.requireNonNull(response.getBody()).getGenre());
     }
 
+    @Test
+    void databaseFilledWithSQL_getOneByNonExistingType_shouldReturnNotFound() {
+        String genreURL = entityUrl + "/type/" + "VALAMI";
+        final ResponseEntity<GenreDTO> response = restTemplate.getForEntity(genreURL, GenreDTO.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 }
