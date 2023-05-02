@@ -1,7 +1,6 @@
 package com.example.homelibrary.DTO;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,6 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookDTO implements Comparable<BookDTO> {
