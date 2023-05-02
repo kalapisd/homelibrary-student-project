@@ -16,8 +16,9 @@ public class GenreMapper {
     public GenreDTO toDTO(Genre genre) {
         GenreDTO genreDTO = new GenreDTO();
         genreDTO.setGenre(genre.getGenreType().toString());
-        genreDTO.setBooksOfGenre(genre.getBooksOfGenre().stream().map(bookMapper::toDTO).toList());
-
+        genreDTO.setBooksOfGenre(genre.getBooksOfGenre().stream()
+                .map(bookMapper::toDTO).sorted()
+                .toList());
         return genreDTO;
     }
 }

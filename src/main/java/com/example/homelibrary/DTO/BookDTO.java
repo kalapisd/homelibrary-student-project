@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.text.Collator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 @Getter
@@ -14,7 +16,7 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookDTO {
+public class BookDTO implements Comparable<BookDTO> {
 
     private String title;
     private List<String> authors;
@@ -30,5 +32,11 @@ public class BookDTO {
     @Override
     public int hashCode() {
         return Objects.hash(getTitle());
+    }
+
+    @Override
+    public int compareTo(BookDTO o) {
+        Collator collator = Collator.getInstance(new Locale("hu", "HU"));
+        return collator.compare(this.getTitle(), o.getTitle());
     }
 }

@@ -107,7 +107,7 @@ public class BookServiceTest {
 
         assertTrue(expectedBookDTOs.size() == actualBookDTOs.size() && expectedBookDTOs.containsAll(actualBookDTOs) && actualBookDTOs.containsAll(expectedBookDTOs));
 
-        verify(bookRepository, times(1)).findAllByAuthors_Name(any());
+        verify(bookRepository, times(1)).findAllByAuthors_NameOrderByTitle(any());
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -412,11 +412,10 @@ public class BookServiceTest {
         BookDTO bookDTO1 = new BookDTO("Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
         BookDTO bookDTO2 = new BookDTO("Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS");
 
-        when(bookRepository.findAllByAuthors_Name(any())).thenReturn(List.of(book1, book2));
+        when(bookRepository.findAllByAuthors_NameOrderByTitle(any())).thenReturn(List.of(book1, book2));
         when(mapper.toDTO(book1)).thenReturn(bookDTO1);
         when(mapper.toDTO(book2)).thenReturn(bookDTO2);
     }
-
 
     private Book buildOneBook() {
         Book book1 = Book.builder()
