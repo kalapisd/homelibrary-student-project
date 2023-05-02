@@ -28,6 +28,7 @@ import static com.example.homelibrary.data.TestAuthorCommand.FINE;
 import static com.example.homelibrary.data.TestAuthorCommand.GRECSO;
 import static com.example.homelibrary.data.TestAuthorCommand.ROWLING;
 import static com.example.homelibrary.data.TestBookCommand.AAT;
+import static com.example.homelibrary.data.TestBookCommand.ELETED_UZLETE;
 import static com.example.homelibrary.data.TestBookCommand.HARRY_POTTER;
 import static com.example.homelibrary.data.TestBookCommand.TANCISKOLA;
 import static com.example.homelibrary.data.TestBookCommand.VERA;
@@ -81,7 +82,7 @@ public class AuthorIntegrationTest {
     }
 
     @Test
-    void oneBookStored_getOneByName_shouldReturnCorrectAuthor() {
+    void oneAuthorStored_getOneByName_shouldReturnCorrectAuthor() {
         restTemplate.postForObject(entityUrl, BACKMAN, AuthorDTO.class);
         String name = BACKMAN.getName();
         final ResponseEntity<AuthorDTO> response = restTemplate.getForEntity(entityUrl + "/name/" + name, AuthorDTO.class);
@@ -123,5 +124,25 @@ public class AuthorIntegrationTest {
 
         assertEquals(1, authorNames.size());
         assertEquals(author, authorNames.get(0));
+    }
+
+    @Test
+    void oneAuthorStored_with_noBooks_deleteById_shouldDeleteAuthor() {
+        restTemplate.postForObject(entityUrl, BACKMAN, AuthorDTO.class);
+        restTemplate.delete(entityUrl + "/" + "1");
+
+        final ResponseEntity<AuthorDTO> response = restTemplate.getForEntity(entityUrl + "/name/" + BACKMAN.getName(), AuthorDTO.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void oneAuthorStored_with_Books_deleteById_shouldNotDeleteAuthor() {
+        String postURL = "http://localhost:" + port + "/books/manually";
+        restTemplate.postForObject(postURL, ELETED_UZLETE, BookDTO.class);
+        restTemplate.delete(entityUrl + "/" + "1");
+
+        final ResponseEntity<AuthorDTO> response = restTemplate.getForEntity(entityUrl + "/name/" + BACKMAN.getName(), AuthorDTO.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(ELETED_UZLETE.getAuthors().get(0), response.getBody().getName());
     }
 }

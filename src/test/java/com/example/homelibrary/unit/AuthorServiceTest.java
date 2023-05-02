@@ -3,6 +3,9 @@ package com.example.homelibrary.unit;
 import com.example.homelibrary.DTO.AuthorDTO;
 import com.example.homelibrary.DTO.commands.AuthorCommand;
 import com.example.homelibrary.entity.Author;
+import com.example.homelibrary.entity.Book;
+import com.example.homelibrary.entity.Genre;
+import com.example.homelibrary.entity.GenreType;
 import com.example.homelibrary.mapper.AuthorMapper;
 import com.example.homelibrary.repository.AuthorRepository;
 import com.example.homelibrary.service.AuthorService;
@@ -159,18 +162,18 @@ public class AuthorServiceTest {
     }
 
     @Test
-    void save_author_return_saved_author(){
+    void save_author_return_saved_author() {
 
         Author savedAuthor = new Author(1L, "Mikszáth Kálmán", new HashSet<>());
         when(authorRepository.save(any())).thenReturn(savedAuthor);
 
-        assertEquals(savedAuthor,authorRepository.save(any()));
+        assertEquals(savedAuthor, authorRepository.save(any()));
         verify(authorRepository, times(1)).save(any());
         verifyNoMoreInteractions(authorRepository);
     }
 
     @Test
-    void save_generated_author_by_name(){
+    void save_generated_author_by_name() {
         Author expectedSavedAuthor = new Author(1L, "Mikszáth Kálmán", new HashSet<>());
         AuthorCommand command = new AuthorCommand("Mikszáth Kálmán");
         when(authorRepository.save(any())).thenReturn(expectedSavedAuthor);
@@ -180,8 +183,37 @@ public class AuthorServiceTest {
 
         Author authorToSave = authorArgumentCaptor.getValue();
 
-        assertEquals(expectedSavedAuthor.getName(),authorToSave.getName());
+        assertEquals(expectedSavedAuthor.getName(), authorToSave.getName());
         verify(authorRepository, times(1)).save(any());
+        verifyNoMoreInteractions(authorRepository);
+    }
+
+    @Test
+    void author_with_existing_books_should_not_be_deleted() {
+        Author expectedSavedAuthor = buildOneAuthorWithBook();
+        AuthorCommand command = new AuthorCommand(expectedSavedAuthor.getName());
+        when(authorRepository.save(any())).thenReturn(expectedSavedAuthor);
+        when(authorRepository.findById(any())).thenReturn(Optional.of(expectedSavedAuthor));
+        service.saveAuthorByName(command);
+
+        service.deleteAuthor(1L);
+
+        verify(authorRepository, times(0)).deleteAuthorById(any());
+        verifyNoMoreInteractions(authorRepository);
+    }
+
+    @Test
+    void author_with_no_books_is_deleted_on_delete() {
+        Author expectedSavedAuthor = new Author(1L, "Mikszáth Kálmán", new HashSet<>());
+        AuthorCommand command = new AuthorCommand("Mikszáth Kálmán");
+        when(authorRepository.save(any())).thenReturn(expectedSavedAuthor);
+        when(authorRepository.findById(any())).thenReturn(Optional.of(expectedSavedAuthor));
+        when(authorRepository.deleteAuthorById(any())).thenReturn(1);
+        service.saveAuthorByName(command);
+
+        service.deleteAuthor(1L);
+
+        verify(authorRepository, times(1)).deleteAuthorById(any());
         verifyNoMoreInteractions(authorRepository);
     }
 
@@ -205,5 +237,37 @@ public class AuthorServiceTest {
         when(authorRepository.findAll()).thenReturn(List.of(author1, author2));
         when(mapper.toDTO(author1)).thenReturn(authorDTO1);
         when(mapper.toDTO(author2)).thenReturn(authorDTO2);
+    }
+
+    private Author buildOneAuthorWithBook() {
+        Book book1 = Book.builder()
+                .id(1L)
+                .title("Harry Potter és a Bölcsek Köve")
+                .subTitle(null)
+                .authors(new HashSet<>())
+                .genre(null)
+                .publishedYear(2000)
+                .numOfPages(316)
+                .piece(1)
+                .build();
+
+        Author author = Author.builder()
+                .id(1L)
+                .name("Joanne K. Rowling")
+                .books(new HashSet<>(List.of(book1)))
+                .build();
+
+        book1.setAuthors(new HashSet<>(List.of(author)));
+
+        Genre kids = Genre.builder()
+                .id(1L)
+                .genreType(GenreType.KIDS)
+                .booksOfGenre(new HashSet<>(List.of(book1)))
+                .build();
+
+        book1.setGenre(kids);
+        kids.getBooksOfGenre().forEach(book -> book.setGenre(kids));
+
+        return author;
     }
 }
