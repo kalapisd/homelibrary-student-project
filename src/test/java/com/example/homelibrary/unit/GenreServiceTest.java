@@ -94,7 +94,6 @@ public class GenreServiceTest {
 
         verify(genreRepository, times(1)).findById(anyLong());
         verifyNoMoreInteractions(genreRepository);
-
     }
 
     @Test
