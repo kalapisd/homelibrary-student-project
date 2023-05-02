@@ -118,7 +118,7 @@
                                         <limit implementation="org.jacoco.report.check.Limit">
                                             <counter>CLASS</counter>
                                             <value>MISSEDCOUNT</value>
-                                            <maximum>2</maximum>
+                                            <maximum>0</maximum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -126,6 +126,7 @@
                             <excludes>
                                 <exclude>com/example/homelibrary/**/*DTO.*</exclude>
                                 <exclude>com/example/homelibrary/**/*Command.*</exclude>
+                                <exclude>com/example/homelibrary/**/*Builder.*</exclude>
                                 <exclude>com/example/homelibrary/entity/**</exclude>
                                 <exclude>com/example/homelibrary/mapper/**</exclude>
                                 <exclude>com/example/homelibrary/utils/utilsdata/**</exclude>
