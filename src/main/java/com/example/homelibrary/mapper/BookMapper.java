@@ -4,7 +4,7 @@ import com.example.homelibrary.entity.Author;
 import com.example.homelibrary.entity.Book;
 import com.example.homelibrary.DTO.commands.BookCommand;
 import com.example.homelibrary.DTO.BookDTO;
-import com.example.homelibrary.utils.VolumeInfo;
+import com.example.homelibrary.utils.utilsdata.VolumeInfo;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -43,5 +43,4 @@ public class BookMapper {
         }
         return bookDTO;
     }
-
 }
