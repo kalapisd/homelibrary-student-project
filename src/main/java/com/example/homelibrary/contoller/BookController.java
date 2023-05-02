@@ -54,7 +54,7 @@ public class BookController {
 
     @GetMapping("/copies/{title}")
     @Operation(summary = "Get the number of copies of a book",
-            description = "Here you can get the number of copies of a book by it's title.")
+            description = "Here you can get the number of copies of a book searched by it's title.")
     public ResponseEntity<Integer> getNumberOfCopies(
             @Parameter(description = "Title of the book", example = "A Gyűrűk Ura")
             @PathVariable("title") String title) {
@@ -74,7 +74,7 @@ public class BookController {
 
     @PostMapping("/manually")
     @Operation(summary = "Manually save book to database",
-            description = "Here you can save book to database by sending a JSON with its parameters.")
+            description = "Here you can save book to database by sending a JSON with it's parameters.")
     public ResponseEntity<BookDTO> saveManually(@RequestBody @Valid BookCommand command, BindingResult errors) {
         if (errors.hasErrors()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(bookService.save(command));
