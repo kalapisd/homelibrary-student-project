@@ -7,17 +7,28 @@ With this REST API, you can perform a variety of CRUD (create, read, update, del
 To get started, you will need to have a basic understanding of REST APIs and how to interact with them using HTTP requests. 
 You will also need to have a tool like Postman or curl to make requests to the API.
 
-You can read about the endpoint supported by the API in the Swagger documentation.
+You can read about the endpoints supported by the API in the Swagger documentation.
 
 ## Installation guide
-To run this API in Docker containers, just execute docker-compose.bat or docker-compose.sh depending on your operating system.
-This will automatically create docker images and run the corresponding containers.
+To run this API in Docker containers, just execute
+
+```
+docker-compose.bat
+```
+
+or
+
+```
+docker-compose.sh
+```
+
+depending on your operating system. This will automatically create docker images and run the corresponding containers.
 
 ### An extra feature
-The API also supports  and sorting of data, so you can easily find the information you need. You can filter books by author or genre, for example, or sort them by publication date.
-To use this API feature, you will need to provide a valid Google Books API key in your requests. This will allow the API to identify you and authenticate your requests. You can obtain an API key easily by following the instructions provided by Google: 
-https://cloud.google.com/docs/authentication/api-keys?visit_id=638186246134113372-4241357020&rd=1
+The API also supports getting book data from Google Books API.
+To use this API feature, you will need to provide a valid Google Books API key in your requests.
 
-The API also supports filtering of data, so you can easily find the information you need. You can filter books by author or genre, for example.
+This will allow the API to identify you and authenticate your requests. You can obtain an API key easily by following the instructions provided by Google: 
+https://cloud.google.com/docs/authentication/api-keys
 
 I hope you find this API useful and easy to use. If you have any questions or feedback, please don't hesitate to contact me!
