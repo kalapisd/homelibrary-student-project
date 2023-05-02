@@ -3,10 +3,10 @@ package com.example.homelibrary.utils.validator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class AuthorValidator implements ConstraintValidator<ValidTitle, String> {
+public class AuthorValidator implements ConstraintValidator<ValidAuthor, String> {
 
     @Override
-    public void initialize(ValidTitle constraintAnnotation) {
+    public void initialize(ValidAuthor constraintAnnotation) {
     }
 
     @Override
