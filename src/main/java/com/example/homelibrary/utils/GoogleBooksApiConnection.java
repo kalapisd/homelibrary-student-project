@@ -3,6 +3,8 @@ package com.example.homelibrary.utils;
 import com.example.homelibrary.DTO.commands.APICommand;
 import com.example.homelibrary.DTO.commands.BookCommand;
 import com.example.homelibrary.mapper.BookMapper;
+import com.example.homelibrary.utils.utilsdata.BookResponse;
+import com.example.homelibrary.utils.utilsdata.VolumeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
