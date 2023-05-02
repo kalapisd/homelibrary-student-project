@@ -9,11 +9,11 @@ You will also need to have a tool like Postman or curl to make requests to the A
 
 You can read about the endpoint supported by the API in the Swagger documentation.
 
-## Installation guide:
+## Installation guide
 To run this API in Docker containers, just execute docker-compose.bat or docker-compose.sh depending on your operating system.
 This will automatically create docker images and run the corresponding containers.
 
-### An extra feature :
+### An extra feature
 The API also supports  and sorting of data, so you can easily find the information you need. You can filter books by author or genre, for example, or sort them by publication date.
 To use this API feature, you will need to provide a valid Google Books API key in your requests. This will allow the API to identify you and authenticate your requests. You can obtain an API key easily by following the instructions provided by Google: 
 https://cloud.google.com/docs/authentication/api-keys?visit_id=638186246134113372-4241357020&rd=1
