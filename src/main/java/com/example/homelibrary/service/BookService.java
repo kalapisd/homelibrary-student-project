@@ -64,7 +64,7 @@ public class BookService {
     }
 
     public List<BookDTO> findAllBooksOfAuthor(String name) {
-        List<Book> books = bookRepository.findAllByAuthors_Name(name);
+        List<Book> books = bookRepository.findAllByAuthors_NameOrderByTitle(name);
         return books.stream().map(mapper::toDTO).toList();
     }
 
