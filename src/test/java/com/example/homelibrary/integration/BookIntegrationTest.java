@@ -149,6 +149,17 @@ public class BookIntegrationTest {
     }
 
     @Test
+    void multipleCopiesOfBookStored_getPiece_returnCorrectNumber() {
+        String postURL = entityUrl + "/manually";
+        List<BookCommand> testData = List.of(HARRY_POTTER, HARRY_POTTER);
+        testData.forEach(book -> restTemplate.postForObject(postURL, book, BookDTO.class));
+
+        final ResponseEntity<Integer> response = restTemplate.getForEntity(entityUrl + "/copies/" + HARRY_POTTER.getTitle(), Integer.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, response.getBody());
+    }
+
+    @Test
     void oneBookStored_updateById_returnUpdatedBook() {
         String postURL = entityUrl + "/manually";
         restTemplate.postForObject(postURL, HARRY_POTTER, BookDTO.class);

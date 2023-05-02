@@ -169,7 +169,6 @@ public class BookServiceTest {
     }
 
 
-
     @Test
     void should_not_find_book_by_title_that_doesnt_exists() {
         String nonExistingTitle = "Biblia";
@@ -177,6 +176,17 @@ public class BookServiceTest {
         when(bookRepository.findByTitle(anyString())).thenReturn(Optional.empty());
         assertNull(service.findBookByTitle(nonExistingTitle));
 
+        verify(bookRepository, times(1)).findByTitle(anyString());
+        verifyNoMoreInteractions(bookRepository);
+    }
+
+    @Test
+    void should_return_copy_number_of_existing_book() {
+        Book book = buildBookWithTwoCopies();
+        when(bookRepository.findByTitle(anyString())).thenReturn(Optional.of(book));
+        Integer numOfCopies = service.getNumberOfCopies(book.getTitle());
+
+        assertEquals(2, numOfCopies);
         verify(bookRepository, times(1)).findByTitle(anyString());
         verifyNoMoreInteractions(bookRepository);
     }
@@ -191,10 +201,7 @@ public class BookServiceTest {
                 .numOfPages(316)
                 .build();
 
-        APICommand apiCommand = APICommand.builder()
-                .parameter("ISBN")
-                .value("123456789")
-                .build();
+        APICommand apiCommand = new APICommand("isbn", "123456789");
 
         when(apiConnection.getDataFromGoogle(apiCommand)).thenReturn(testCommand);
         when(bookRepository.findByTitle(anyString())).thenReturn(Optional.empty());
@@ -231,7 +238,7 @@ public class BookServiceTest {
         when(bookRepository.findById(id)).thenReturn(Optional.of(book));
 
         String expectedName = "Harry Potter és az Azkabani fogoly";
-        when(mapper.toDTO(any())).thenReturn(new BookDTO(expectedName,null, null));
+        when(mapper.toDTO(any())).thenReturn(new BookDTO(expectedName, null, null));
         BookDTO returnDTO = service.updateBook(1L, bookCommand);
         String actualName = returnDTO.getTitle();
 
@@ -240,7 +247,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void delete_book_with_correctId_should_remove_it_from_genre() {
+    void only_one_copy_presents_delete_book_with_correctId_should_remove_it_from_genre() {
 
         Book book = buildOneBook();
 
@@ -291,7 +298,7 @@ public class BookServiceTest {
         assertEquals(numOfBooksOfAuthor, numOfBooksOfAuthorAfterDelete);
 
         int pieceNUmber = author.getBooks().stream().map(Book::getPiece).toList().get(0);
-        assertEquals(1,pieceNUmber);
+        assertEquals(1, pieceNUmber);
 
         verify(bookRepository, times(1)).save(any());
         verifyNoMoreInteractions(bookRepository);
