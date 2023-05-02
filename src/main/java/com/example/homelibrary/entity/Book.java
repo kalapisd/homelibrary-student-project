@@ -73,6 +73,10 @@ public class Book {
         piece++;
     }
 
+    public void removePiece() {
+        piece--;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getTitle());

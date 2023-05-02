@@ -146,15 +146,19 @@ public class BookService {
 
         Optional<Book> book = bookRepository.findById(id);
 
-        if (book.isEmpty()) {
-            System.out.println("!");
-        } else {
+        int deletedRows = 0;
+        if (book.isPresent()) {
             Book bookToRemove = book.get();
-            deleteBookFromAuthors(new ArrayList<>(bookToRemove.getAuthors()), bookToRemove);
-            deleteBookFromGenre(bookToRemove.getGenre(), bookToRemove);
+            if (bookToRemove.getPiece() > 1) {
+                bookToRemove.removePiece();
+                bookRepository.save(bookToRemove);
+            } else {
+                deleteBookFromAuthors(new ArrayList<>(bookToRemove.getAuthors()), bookToRemove);
+                deleteBookFromGenre(bookToRemove.getGenre(), bookToRemove);
+                deletedRows = bookRepository.deleteBooksById(id);
+            }
         }
 
-        int deletedRows = bookRepository.deleteBooksById(id);
         if (deletedRows == 0) {
             logger.info("Book not found with id: {}!", id);
         } else {
