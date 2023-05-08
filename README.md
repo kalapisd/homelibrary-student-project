@@ -61,4 +61,4 @@ This will allow the Google Books API to identify you and authenticate your reque
 https://cloud.google.com/docs/authentication/api-keys
 If for some reason you cannot generate your own Google Books API key, here is a default key: AIzaSyAjER9gZjSb_YnJHsVNhl1fDWRK9y_o88g
 
-I hope you find this API useful and easy to use. If you have any questions or feedback, please don't hesitate to contact me!
+I hope you find this API useful and easy to use. If you have any questions or feedback, please don't hesitate to [contact me](mailto:kalapisd@gmail.com)!
