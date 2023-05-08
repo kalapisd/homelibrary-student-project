@@ -7,11 +7,10 @@ With this REST API, you can perform a variety of CRUD (create, read, update, del
 To get started, you will need to have a basic understanding of REST APIs and how to interact with them using HTTP requests. 
 You will also need to have a tool like Postman or curl to make requests to the API.
 
-You can read about the endpoints supported by the API in the Swagger documentation. 
-This documentation is available at: http://localhost:8080/swagger-ui/index.html
+You can read about the endpoints supported by the API in the [Swagger documentation](http://localhost:8080/swagger-ui/index.html)
 
 ## Installation guide
-To run this API in Docker containers, just execute
+- To run this API in Docker containers, just execute
 
 ```
 docker-compose.bat
@@ -25,7 +24,7 @@ docker-compose.sh
 
 depending on your operating system. This will automatically create docker images and run the corresponding containers.
 
-If you only need to set up the database in a Docker container, run 
+- If you only need to set up the database in a Docker container, run 
 ```
 docker-db-build.bat
 ```
@@ -41,13 +40,21 @@ and then
 ```
 docker-db-run.sh
 ```
-on Linux.
+on Linux.  
+
+Set the following environment variables on your computer to run this application:  
+DB_PORT=5442  
+DB_URL=localhost  
+POSTGRES_PASSWORD=postgres  
+POSTGRES_USER=postgres  
+GOOGLE_BOOKS_API_KEY= ** here you put your own Google Books API key (see below) **
 
 ### An extra feature
 The API also supports getting book data from Google Books API.
 To use this API feature, you will need to provide a valid Google Books API key in your requests.
 
-This will allow the API to identify you and authenticate your requests. You can obtain an API key easily by following the instructions provided by Google: 
+This will allow the Google Books API to identify you and authenticate your requests. You can obtain an API key easily by following the instructions provided by Google: 
 https://cloud.google.com/docs/authentication/api-keys
+If for some reason you cannot generate your own Google Books API key, here is a default key: AIzaSyAjER9gZjSb_YnJHsVNhl1fDWRK9y_o88g
 
 I hope you find this API useful and easy to use. If you have any questions or feedback, please don't hesitate to contact me!
