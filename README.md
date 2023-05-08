@@ -49,6 +49,10 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_USER=postgres  
 GOOGLE_BOOKS_API_KEY= ** here you put your own Google Books API key (see below) **
 
+### Testing the application
+You can use the Jacoco Maven plugin to generate reports for test coverage. 
+The plugin is configured to evaluate test results during Maven verify phase.
+
 ### An extra feature
 The API also supports getting book data from Google Books API.
 To use this API feature, you will need to provide a valid Google Books API key in your requests.
