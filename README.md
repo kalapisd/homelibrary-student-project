@@ -7,7 +7,8 @@ With this REST API, you can perform a variety of CRUD (create, read, update, del
 To get started, you will need to have a basic understanding of REST APIs and how to interact with them using HTTP requests. 
 You will also need to have a tool like Postman or curl to make requests to the API.
 
-You can read about the endpoints supported by the API in the Swagger documentation.
+You can read about the endpoints supported by the API in the Swagger documentation. 
+This documentation is available at: http://localhost:8080/swagger-ui/index.html
 
 ## Installation guide
 To run this API in Docker containers, just execute
@@ -23,6 +24,24 @@ docker-compose.sh
 ```
 
 depending on your operating system. This will automatically create docker images and run the corresponding containers.
+
+If you only need to set up the database in a Docker container, run 
+```
+docker-db-build.bat
+```
+and then 
+```
+docker-db-run.bat
+```
+on Windows operating system, or
+```
+docker-db-build.sh
+```
+and then
+```
+docker-db-run.sh
+```
+on Linux.
 
 ### An extra feature
 The API also supports getting book data from Google Books API.
