@@ -47,7 +47,7 @@ DB_PORT=5442
 DB_URL=localhost  
 POSTGRES_PASSWORD=postgres  
 POSTGRES_USER=postgres  
-GOOGLE_BOOKS_API_KEY= ** here you put your own Google Books API key (see below) **
+GOOGLE_BOOKS_API_KEY= ** put your own Google Books API key here (see below) **
 
 ### Testing the application
 You can use the Jacoco Maven plugin to generate reports for test coverage. 
@@ -59,6 +59,5 @@ To use this API feature, you will need to provide a valid Google Books API key i
 
 This will allow the Google Books API to identify you and authenticate your requests. You can obtain an API key easily by following the instructions provided by Google: 
 https://cloud.google.com/docs/authentication/api-keys
-If for some reason you cannot generate your own Google Books API key, here is a default key: AIzaSyAjER9gZjSb_YnJHsVNhl1fDWRK9y_o88g
 
 I hope you find this API useful and easy to use. If you have any questions or feedback, please don't hesitate to [contact me](mailto:kalapisd@gmail.com)!
