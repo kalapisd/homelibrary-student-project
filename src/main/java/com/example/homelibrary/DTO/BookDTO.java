@@ -16,6 +16,7 @@ import java.util.Objects;
 @NoArgsConstructor
 public class BookDTO implements Comparable<BookDTO> {
 
+    private long id;
     private String title;
     private List<String> authors;
     private String genre;

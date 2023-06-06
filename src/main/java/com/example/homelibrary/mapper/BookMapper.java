@@ -36,6 +36,7 @@ public class BookMapper {
 
     public BookDTO toDTO(Book book){
         BookDTO bookDTO = new BookDTO();
+        bookDTO.setId(book.getId());
         bookDTO.setAuthors(book.getAuthors().stream().map(Author::getName).collect(Collectors.toList()));
         bookDTO.setTitle(book.getTitle());
         if (book.getGenre() != null) {

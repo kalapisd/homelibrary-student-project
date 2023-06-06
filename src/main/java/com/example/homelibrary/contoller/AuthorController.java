@@ -80,7 +80,7 @@ public class AuthorController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete author from database",
-            description = "Here you can delete an author from the database by giving its ID You only can delete an author, if there is no book stored with this author.")
+            description = "Here you can delete an author from the database by giving its ID. You only can delete an author, if there is no book stored with this author.")
     public void delete(
             @Parameter(description = "Id of the author", example = "1")
             @PathVariable("id") Long id) {
