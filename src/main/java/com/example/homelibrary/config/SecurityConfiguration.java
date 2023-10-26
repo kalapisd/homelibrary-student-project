@@ -17,22 +17,25 @@ public class SecurityConfiguration {
         // Disable Cross Site Request Forgery
         http.csrf().disable();
 
-        // Protect endpoints at /api/<type>/secure
+        // Protect endpoints
         http.authorizeHttpRequests(configurer ->
                         configurer
-                                .requestMatchers("/authors/**",
-                                        "/books/**",
-                                        "/genre/**")
-                                .authenticated())
+                                //.requestMatchers(
+                                 //       "/books/test").permitAll()
+                                .anyRequest().permitAll());
+                                //.authenticated())
+              //  .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
+
+        /*
                 .oauth2ResourceServer()
                 .jwt();
-
+*/
         // Add CORS filters
         http.cors();
 
         // Add content negotiation strategy
-        http.setSharedObject(ContentNegotiationStrategy.class,
-                new HeaderContentNegotiationStrategy());
+        //http.setSharedObject(ContentNegotiationStrategy.class,
+          //      new HeaderContentNegotiationStrategy());
 
         // Force a non-empty response body for 401's to make the response friendly
         Okta.configureResourceServer401ResponseBody(http);

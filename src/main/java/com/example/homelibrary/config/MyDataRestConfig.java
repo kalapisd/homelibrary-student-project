@@ -1,3 +1,4 @@
+
 package com.example.homelibrary.config;
 
 import com.example.homelibrary.entity.Author;
@@ -9,14 +10,18 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
+
 /**
  * Future role: Responsible for restricting HTTP methods for non-admin users
  * This function does not work, as security functions are not yet implemented
  */
+
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
 
+
     private String theAllowedOrigins = "http://localhost:3000";
+
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config,
@@ -35,10 +40,13 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         disableHttpMethods(Author.class, config, theUnsupportedActions);
         disableHttpMethods(Genre.class, config, theUnsupportedActions);
 
+
+
         /* Configure CORS Mapping */
         cors.addMapping(config.getBasePath() + "/**")
                 .allowedOrigins(theAllowedOrigins);
     }
+
 
     private void disableHttpMethods(Class theClass,
                                     RepositoryRestConfiguration config,
@@ -50,5 +58,6 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
                 .withCollectionExposure((metdata, httpMethods) ->
                         httpMethods.disable(theUnsupportedActions));
     }
+
 }
 

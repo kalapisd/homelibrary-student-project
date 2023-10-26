@@ -6,6 +6,7 @@ import com.example.homelibrary.DTO.commands.BookCommand;
 import com.example.homelibrary.entity.Author;
 import com.example.homelibrary.entity.Book;
 import com.example.homelibrary.entity.Genre;
+import com.example.homelibrary.entity.Rating;
 import com.example.homelibrary.mapper.BookMapper;
 import com.example.homelibrary.repository.BookRepository;
 import com.example.homelibrary.utils.GoogleBooksApiConnection;
@@ -14,11 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class BookService {
@@ -70,7 +67,7 @@ public class BookService {
     public Integer getNumberOfCopies(String title) {
         Optional<Book> book = bookRepository.findByTitle(title);
         if (book.isPresent()) {
-            return book.get().getPiece();
+            return book.get().getCopies();
         } else {
             logger.info("No such book was found with title: {}!", title);
             return null;
@@ -92,6 +89,7 @@ public class BookService {
         Set<Author> authors = authorService.getAuthorsToSaveBook(command.getAuthors());
         Book book = bookRepository.findByTitle(command.getTitle()).orElseGet(() -> buildBook(command));
         book.addPiece();
+        book.setCurrentRating(null);
 
         if (!authors.isEmpty()) {
             for (Author author : authors) {
@@ -120,12 +118,16 @@ public class BookService {
                 .publishedYear(command.getPublishedYear())
                 .numOfPages(command.getNumOfPages())
                 .language(command.getLanguage())
-                .piece(0)
+                .copies(1)
                 .build();
 
         if (command.getGenre() != null) {
             Genre genre = genreService.getGenreByType(command.getGenre()).get();
             genre.addBook(book);
+        }
+
+        if (command.getImage() != null) {
+            book.setImage(command.getImage());
         }
         return book;
     }
@@ -163,7 +165,7 @@ public class BookService {
         int deletedRows = 0;
         if (book.isPresent()) {
             Book bookToRemove = book.get();
-            if (bookToRemove.getPiece() > 1) {
+            if (bookToRemove.getCopies() > 1) {
                 bookToRemove.removePiece();
                 bookRepository.save(bookToRemove);
             } else {
@@ -209,4 +211,25 @@ public class BookService {
         genre.removeBook(book);
         genreService.save(genre);
     }
+
+    public void addImageToBook(String bookId, byte[] image) {
+        Book book = bookRepository.findById(Long.valueOf(bookId)).get();
+        book.setImage(image);
+        bookRepository.save(book);
+    }
+
+    public void setRating(String bookId, Rating rating) {
+        Book book = bookRepository.findById(Long.valueOf(bookId)).get();
+        book.setCurrentRating(rating);
+    }
+
+    public List<BookDTO> findBestBooks() {
+        return bookRepository.findAll()
+                .stream()
+                .map(mapper::toDTO)
+                .sorted(Comparator.comparing(BookDTO::getCurrentRating).reversed())
+                .limit(9)
+                .toList();
+    }
+
 }
