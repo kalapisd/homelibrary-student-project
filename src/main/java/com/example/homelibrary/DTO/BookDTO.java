@@ -21,6 +21,10 @@ public class BookDTO implements Comparable<BookDTO> {
     private List<String> authors;
     private String genre;
 
+    private double currentRating;
+
+    private String image;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
