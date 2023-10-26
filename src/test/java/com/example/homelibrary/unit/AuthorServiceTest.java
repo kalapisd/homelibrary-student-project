@@ -248,7 +248,7 @@ public class AuthorServiceTest {
                 .genre(null)
                 .publishedYear(2000)
                 .numOfPages(316)
-                .piece(1)
+                .copies(1)
                 .build();
 
         Author author = Author.builder()

@@ -1,20 +1,14 @@
 package com.example.homelibrary.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -67,14 +61,41 @@ public class Book {
 
     private String language;
 
-    private int piece;
+    private int copies;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "rating_id")
+    private Set<Rating> ratings = new HashSet<>();
+
+    private double currentRating;
+
+    @Lob
+    @JdbcTypeCode(SqlTypes.LONG32VARBINARY)
+    private byte[] image;
 
     public void addPiece() {
-        piece++;
+        copies++;
     }
 
     public void removePiece() {
-        piece--;
+        copies--;
+    }
+
+    public void setCurrentRating (Rating rating) {
+
+        if(rating == null) {
+            this.currentRating = 0;
+        } else {
+            this.currentRating = this.getCurrentRating() == 0 ? rating.getRatingScore() : getAverageRating(rating);
+        }
+    }
+
+    private double getAverageRating(Rating rating) {
+        double currentRating = this.getRatings().stream().mapToInt(Rating::getRatingScore).average().orElse(0);
+
+        int numOfRatings = this.getRatings().size();
+
+        return (currentRating + rating.getRatingScore()) / (numOfRatings + 1);
     }
 
     @Override

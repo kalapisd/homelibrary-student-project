@@ -79,8 +79,8 @@ public class BookServiceTest {
         setUpDatabaseForFindAll();
 
         List<BookDTO> expectedBookDTOs = List.of(
-                new BookDTO("Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS"),
-                new BookDTO("Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS")
+                new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS"),
+                new BookDTO(2, "Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS")
         );
 
         List<BookDTO> actualBookDTOs = service.findAllBooks();
@@ -99,8 +99,8 @@ public class BookServiceTest {
         String name = "Joanne K. Rowling";
 
         List<BookDTO> expectedBookDTOs = List.of(
-                new BookDTO("Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS"),
-                new BookDTO("Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS")
+                new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS"),
+                new BookDTO(2, "Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS")
         );
 
         List<BookDTO> actualBookDTOs = service.findAllBooksOfAuthor(name);
@@ -126,7 +126,7 @@ public class BookServiceTest {
                 .build();
 
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
-        BookDTO expectedDTO = new BookDTO("Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
+        BookDTO expectedDTO = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
         when(mapper.toDTO(any())).thenReturn(expectedDTO);
         BookDTO actualDTO = service.findBookById(1L);
         assertEquals(expectedDTO, actualDTO);
@@ -159,7 +159,7 @@ public class BookServiceTest {
                 .build();
 
         when(bookRepository.findByTitle(anyString())).thenReturn(Optional.of(book));
-        BookDTO expectedDTO = new BookDTO("Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
+        BookDTO expectedDTO = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
         when(mapper.toDTO(any())).thenReturn(expectedDTO);
         BookDTO actualDTO = service.findBookByTitle("Harry Potter és a Bölcsek Köve");
         assertEquals(expectedDTO, actualDTO);
@@ -238,7 +238,7 @@ public class BookServiceTest {
         when(bookRepository.findById(id)).thenReturn(Optional.of(book));
 
         String expectedName = "Harry Potter és az Azkabani fogoly";
-        when(mapper.toDTO(any())).thenReturn(new BookDTO(expectedName, null, null));
+        when(mapper.toDTO(any())).thenReturn(new BookDTO(1, expectedName, null, null));
         BookDTO returnDTO = service.updateBook(1L, bookCommand);
         String actualName = returnDTO.getTitle();
 
@@ -297,7 +297,7 @@ public class BookServiceTest {
         int numOfBooksOfAuthorAfterDelete = author.getBooks().size();
         assertEquals(numOfBooksOfAuthor, numOfBooksOfAuthorAfterDelete);
 
-        int pieceNUmber = author.getBooks().stream().map(Book::getPiece).toList().get(0);
+        int pieceNUmber = author.getBooks().stream().map(Book::getCopies).toList().get(0);
         assertEquals(1, pieceNUmber);
 
         verify(bookRepository, times(1)).save(any());
@@ -384,8 +384,8 @@ public class BookServiceTest {
                 .piece(1)
                 .build();
 
-        BookDTO bookDTO1 = new BookDTO("Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
-        BookDTO bookDTO2 = new BookDTO("Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS");
+        BookDTO bookDTO1 = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
+        BookDTO bookDTO2 = new BookDTO(2, "Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS");
 
         when(bookRepository.findAll()).thenReturn(List.of(book1, book2));
         when(mapper.toDTO(book1)).thenReturn(bookDTO1);
@@ -416,8 +416,8 @@ public class BookServiceTest {
                 .piece(1)
                 .build();
 
-        BookDTO bookDTO1 = new BookDTO("Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
-        BookDTO bookDTO2 = new BookDTO("Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS");
+        BookDTO bookDTO1 = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
+        BookDTO bookDTO2 = new BookDTO(2, "Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS");
 
         when(bookRepository.findAllByAuthors_NameOrderByTitle(any())).thenReturn(List.of(book1, book2));
         when(mapper.toDTO(book1)).thenReturn(bookDTO1);
