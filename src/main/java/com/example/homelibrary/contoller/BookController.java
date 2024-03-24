@@ -1,14 +1,13 @@
 package com.example.homelibrary.contoller;
 
 import com.example.homelibrary.DTO.BookDTO;
-import com.example.homelibrary.DTO.commands.APICommand;
-import com.example.homelibrary.DTO.commands.BookCommand;
+import com.example.homelibrary.command.APICommand;
+import com.example.homelibrary.command.BookCommand;
 import com.example.homelibrary.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
 @RequestMapping("/books")
 @Tag(name = "Here you can make operations on books")
 public class BookController {
 
     private final BookService bookService;
 
-    @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
     }

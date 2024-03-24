@@ -1,7 +1,7 @@
 package com.example.homelibrary.service;
 
 import com.example.homelibrary.DTO.AuthorDTO;
-import com.example.homelibrary.DTO.commands.AuthorCommand;
+import com.example.homelibrary.command.AuthorCommand;
 import com.example.homelibrary.entity.Author;
 import com.example.homelibrary.mapper.AuthorMapper;
 import com.example.homelibrary.repository.AuthorRepository;

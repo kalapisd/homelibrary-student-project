@@ -15,6 +15,7 @@ import java.util.Objects;
 public class AuthorDTO {
 
     private String name;
+
     private List<String> books;
 
     @Override

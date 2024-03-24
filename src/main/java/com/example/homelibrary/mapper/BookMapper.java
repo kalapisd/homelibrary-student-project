@@ -1,14 +1,12 @@
 package com.example.homelibrary.mapper;
 
+import com.example.homelibrary.DTO.BookDTO;
+import com.example.homelibrary.command.BookCommand;
 import com.example.homelibrary.entity.Author;
 import com.example.homelibrary.entity.Book;
-import com.example.homelibrary.DTO.commands.BookCommand;
-import com.example.homelibrary.DTO.BookDTO;
 import com.example.homelibrary.utils.utilsdata.VolumeInfo;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 public class BookMapper {
@@ -38,7 +36,7 @@ public class BookMapper {
     public BookDTO toDTO(Book book){
         BookDTO bookDTO = new BookDTO();
         bookDTO.setId(book.getId());
-        bookDTO.setAuthors(book.getAuthors().stream().map(Author::getName).collect(Collectors.toList()));
+        bookDTO.setAuthors(book.getAuthors().stream().map(Author::getName).toList());
         bookDTO.setTitle(book.getTitle());
         if (book.getGenre() != null) {
             bookDTO.setGenre(String.valueOf(book.getGenre().getGenreType()));

@@ -1,7 +1,7 @@
 package com.example.homelibrary.utils;
 
-import com.example.homelibrary.DTO.commands.APICommand;
-import com.example.homelibrary.DTO.commands.BookCommand;
+import com.example.homelibrary.command.APICommand;
+import com.example.homelibrary.command.BookCommand;
 import com.example.homelibrary.mapper.BookMapper;
 import com.example.homelibrary.utils.utilsdata.BookResponse;
 import com.example.homelibrary.utils.utilsdata.VolumeInfo;

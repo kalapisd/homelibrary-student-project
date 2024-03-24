@@ -1,8 +1,8 @@
 package com.example.homelibrary.service;
 
 import com.example.homelibrary.DTO.BookDTO;
-import com.example.homelibrary.DTO.commands.APICommand;
-import com.example.homelibrary.DTO.commands.BookCommand;
+import com.example.homelibrary.command.APICommand;
+import com.example.homelibrary.command.BookCommand;
 import com.example.homelibrary.entity.Author;
 import com.example.homelibrary.entity.Book;
 import com.example.homelibrary.entity.Genre;

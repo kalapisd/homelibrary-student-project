@@ -15,6 +15,7 @@ import java.util.Objects;
 public class GenreDTO {
 
     private String genre;
+
     private List<BookDTO> booksOfGenre;
 
     @Override

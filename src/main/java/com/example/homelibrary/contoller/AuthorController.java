@@ -2,7 +2,7 @@ package com.example.homelibrary.contoller;
 
 import com.example.homelibrary.DTO.AuthorDTO;
 import com.example.homelibrary.DTO.BookDTO;
-import com.example.homelibrary.DTO.commands.AuthorCommand;
+import com.example.homelibrary.command.AuthorCommand;
 import com.example.homelibrary.service.AuthorService;
 import com.example.homelibrary.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
 @RequestMapping("/authors")
 @Tag(name = "Here you can make operations on authors")
 public class AuthorController {
@@ -39,7 +39,7 @@ public class AuthorController {
     @GetMapping("/books")
     @Operation(summary = "Find all books of author",
             description = "Here you can get all books of an author of interest.")
-    private List<BookDTO> getBooksOfAuthor(@RequestParam("author") String author) {
+    public List<BookDTO> getBooksOfAuthor(@RequestParam("author") String author) {
         return bookService.findAllBooksOfAuthor(author);
     }
 

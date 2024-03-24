@@ -17,13 +17,17 @@ import java.util.Objects;
 public class BookDTO implements Comparable<BookDTO> {
 
     private long id;
+
     private String title;
+
     private List<String> authors;
+
     private String genre;
 
     private double currentRating;
 
     private String image;
+
 
     @Override
     public boolean equals(Object o) {
