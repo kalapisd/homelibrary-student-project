@@ -1,46 +1,81 @@
 package com.example.homelibrary.config;
 
-import com.okta.spring.boot.oauth.Okta;
+import com.example.homelibrary.service.MyUserDetailsService;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.accept.ContentNegotiationStrategy;
-import org.springframework.web.accept.HeaderContentNegotiationStrategy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 
+    private final MyUserDetailsService userDetailsService;
+
+    public SecurityConfiguration(MyUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        // Disable Cross Site Request Forgery
-        http.csrf().disable();
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+                .getSharedObject(AuthenticationManagerBuilder.class);
 
-        // Protect endpoints
-        http.authorizeHttpRequests(configurer ->
-                        configurer
-                                //.requestMatchers(
-                                 //       "/books/test").permitAll()
-                                .anyRequest().permitAll());
-                                //.authenticated())
-              //  .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
+        authenticationManagerBuilder
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(getPasswordEncoder());
 
-        /*
-                .oauth2ResourceServer()
-                .jwt();
-*/
-        // Add CORS filters
-        http.cors();
+        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
-        // Add content negotiation strategy
-        //http.setSharedObject(ContentNegotiationStrategy.class,
-          //      new HeaderContentNegotiationStrategy());
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .requestMatchers(
+                                        "/login", "/register", "/swagger-ui").permitAll()
+                                .anyRequest().authenticated())
+                .authenticationManager(authenticationManager)
+                .addFilterBefore(new RequestResponseLoggingFilter(), UsernamePasswordAuthenticationFilter.class)
 
-        // Force a non-empty response body for 401's to make the response friendly
-        Okta.configureResourceServer401ResponseBody(http);
+                .addFilterBefore(new CustomUserNameAndPasswordAuthenticationFilter(userDetailsService, authenticationManager),
+                        UsernamePasswordAuthenticationFilter.class)
+                .securityContext(securityContext -> securityContext
+                .securityContextRepository(
+                        new DelegatingSecurityContextRepository(
+                                new RequestAttributeSecurityContextRepository(),
+                                new HttpSessionSecurityContextRepository())));
 
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
+
+    // @Bean
+    public FilterRegistrationBean<RequestResponseLoggingFilter> loggingFilter() {
+        FilterRegistrationBean<RequestResponseLoggingFilter> registrationBean = new FilterRegistrationBean<>();
+
+        registrationBean.setFilter(new RequestResponseLoggingFilter());
+
+        registrationBean.addUrlPatterns("/books/test");
+        registrationBean.setOrder(1);
+
+        return registrationBean;
+
     }
 
 }
