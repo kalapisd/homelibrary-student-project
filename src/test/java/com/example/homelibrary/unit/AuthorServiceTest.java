@@ -1,7 +1,7 @@
 package com.example.homelibrary.unit;
 
 import com.example.homelibrary.DTO.AuthorDTO;
-import com.example.homelibrary.DTO.commands.AuthorCommand;
+import com.example.homelibrary.command.AuthorCommand;
 import com.example.homelibrary.entity.Author;
 import com.example.homelibrary.entity.Book;
 import com.example.homelibrary.entity.Genre;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthorServiceTest {
+class AuthorServiceTest {
 
     @InjectMocks
     AuthorService service;
@@ -49,13 +49,21 @@ public class AuthorServiceTest {
     @Captor
     ArgumentCaptor<Author> authorArgumentCaptor;
 
+    private static final AuthorDTO DTO_ROWLING = new AuthorDTO("Joanne K. Rowling", null);
+    private static final AuthorDTO DTO_KING = new AuthorDTO("Stephen King", null);
+
+    private static final Author J_K_ROWLING = Author.builder()
+            .id(1L)
+            .name("Joanne K. Rowling")
+            .books(new HashSet<>())
+            .build();
 
     @Test
     void should_return_empty_list_when_no_authors_present() {
 
         when(authorRepository.findAll()).thenReturn(new ArrayList<>());
 
-        assertThat(service.findAllAuthors()).hasSize(0);
+        assertThat(service.findAllAuthors()).isEmpty();
         verify(authorRepository, times(1)).findAll();
         verifyNoMoreInteractions(authorRepository);
     }
@@ -66,8 +74,8 @@ public class AuthorServiceTest {
         setUpDatabaseForFindAll();
 
         List<AuthorDTO> expectedAuthorDTOs = List.of(
-                new AuthorDTO("Joanne K. Rowling", null),
-                new AuthorDTO("Stephen King", null)
+                DTO_ROWLING,
+                DTO_KING
         );
 
         List<AuthorDTO> actualAuthorDTOs = service.findAllAuthors();
@@ -80,17 +88,11 @@ public class AuthorServiceTest {
 
     @Test
     void should_find_and_return_author_by_name() {
-        Author author = Author.builder()
-                .id(1L)
-                .name("Joanne K. Rowling")
-                .books(new HashSet<>())
-                .build();
 
-        when(authorRepository.findAuthorByName(anyString())).thenReturn(Optional.of(author));
-        AuthorDTO expectedDTO = new AuthorDTO("Joanne K. Rowling", null);
-        when(mapper.toDTO(any())).thenReturn(expectedDTO);
+        when(authorRepository.findAuthorByName(anyString())).thenReturn(Optional.of(J_K_ROWLING));
+        when(mapper.toDTO(any())).thenReturn(DTO_ROWLING);
         AuthorDTO actualDTO = service.findAuthorByName("Joanne K. Rowling");
-        assertEquals(expectedDTO, actualDTO);
+        assertEquals(DTO_ROWLING, actualDTO);
 
         verify(authorRepository, times(1)).findAuthorByName(anyString());
         verifyNoMoreInteractions(authorRepository);
@@ -107,17 +109,11 @@ public class AuthorServiceTest {
 
     @Test
     void should_find_and_return_author_by_id() {
-        Author author = Author.builder()
-                .id(1L)
-                .name("Joanne K. Rowling")
-                .books(new HashSet<>())
-                .build();
 
-        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(author));
-        AuthorDTO expectedDTO = new AuthorDTO("Joanne K. Rowling", null);
-        when(mapper.toDTO(any())).thenReturn(expectedDTO);
+        when(authorRepository.findById(anyLong())).thenReturn(Optional.of(J_K_ROWLING));
+        when(mapper.toDTO(any())).thenReturn(DTO_ROWLING);
         AuthorDTO actualDTO = service.findAuthorById(1L);
-        assertEquals(expectedDTO, actualDTO);
+        assertEquals(DTO_ROWLING, actualDTO);
 
         verify(authorRepository, times(1)).findById(anyLong());
         verifyNoMoreInteractions(authorRepository);
@@ -219,24 +215,15 @@ public class AuthorServiceTest {
 
     private void setUpDatabaseForFindAll() {
 
-        Author author1 = Author.builder()
-                .id(1L)
-                .name("Joanne K. Rowling")
-                .books(new HashSet<>())
-                .build();
-
         Author author2 = Author.builder()
                 .id(2L)
                 .name("Stephen King")
                 .books(new HashSet<>())
                 .build();
 
-        AuthorDTO authorDTO1 = new AuthorDTO("Joanne K. Rowling", null);
-        AuthorDTO authorDTO2 = new AuthorDTO("Stephen King", null);
-
-        when(authorRepository.findAll()).thenReturn(List.of(author1, author2));
-        when(mapper.toDTO(author1)).thenReturn(authorDTO1);
-        when(mapper.toDTO(author2)).thenReturn(authorDTO2);
+        when(authorRepository.findAll()).thenReturn(List.of(J_K_ROWLING, author2));
+        when(mapper.toDTO(J_K_ROWLING)).thenReturn(DTO_ROWLING);
+        when(mapper.toDTO(author2)).thenReturn(DTO_KING);
     }
 
     private Author buildOneAuthorWithBook() {

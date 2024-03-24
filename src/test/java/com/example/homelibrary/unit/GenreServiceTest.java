@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.homelibrary.entity.GenreType.KIDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GenreServiceTest {
+class GenreServiceTest {
 
     @InjectMocks
     GenreService service;
@@ -40,15 +41,17 @@ public class GenreServiceTest {
     @Mock
     GenreMapper mapper;
 
+    private static final BookDTO BOOKDTO_ONE = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS", 5, null);
+    private static final BookDTO BOOKDTO_TWO = new BookDTO(2, "Düne", List.of("Frank Herbert"), "SCI_FI", 5, null);
+
     @Test
     void should_find_and_return_all_genre() {
 
         setUpDatabaseForFindAll();
 
         List<GenreDTO> expectedDTOs = List.of(
-                new GenreDTO("KIDS", List.of(new BookDTO("Harry Potter", List.of("Joanne K. Rowling"), "KIDS"))),
-                new GenreDTO("SCI_FI", List.of(new BookDTO("Düne", List.of("Frank Herbert"), "SCI_FI")))
-        );
+                new GenreDTO("KIDS", List.of(BOOKDTO_ONE)),
+                new GenreDTO("SCI_FI", List.of(BOOKDTO_TWO)));
 
         List<GenreDTO> actualDTOs = service.findAllGenre();
 
@@ -69,16 +72,16 @@ public class GenreServiceTest {
                 .genre(null)
                 .publishedYear(2000)
                 .numOfPages(316)
-                .piece(1)
+                .copies(1)
                 .build();
 
-        Genre genre = new Genre(1L, GenreType.KIDS, null);
+        Genre genre = new Genre(1L, KIDS, null);
 
         book.setGenre(genre);
         genre.setBooksOfGenre(new HashSet<>(List.of(book)));
 
         when(genreRepository.findById(anyLong())).thenReturn(Optional.of(genre));
-        GenreDTO expectedDTO = new GenreDTO("KIDS", List.of(new BookDTO("Harry Potter", List.of("Joanne K. Rowling"), "KIDS")));
+        GenreDTO expectedDTO = new GenreDTO("KIDS", List.of(BOOKDTO_ONE));
         when(mapper.toDTO(any())).thenReturn(expectedDTO);
         GenreDTO actualDTO = service.findGenreById(1L);
         assertEquals(expectedDTO, actualDTO);
@@ -107,16 +110,16 @@ public class GenreServiceTest {
                 .genre(null)
                 .publishedYear(2000)
                 .numOfPages(316)
-                .piece(1)
+                .copies(1)
                 .build();
 
-        Genre genre = new Genre(1L, GenreType.KIDS, null);
+        Genre genre = new Genre(1L, KIDS, null);
 
         book.setGenre(genre);
         genre.setBooksOfGenre(new HashSet<>(List.of(book)));
 
         when(genreRepository.findByGenreType(any())).thenReturn(Optional.of(genre));
-        GenreDTO expectedDTO = new GenreDTO("KIDS", List.of(new BookDTO("Harry Potter", List.of("Joanne K. Rowling"), "KIDS")));
+        GenreDTO expectedDTO = new GenreDTO("KIDS", List.of(BOOKDTO_ONE));
         when(mapper.toDTO(any())).thenReturn(expectedDTO);
         GenreDTO actualDTO = service.findGenreByGenreType("KIDS");
         assertEquals(expectedDTO, actualDTO);
@@ -126,11 +129,11 @@ public class GenreServiceTest {
     }
 
     private void setUpDatabaseForFindAll() {
-        Genre genre1 = new Genre(1L, GenreType.KIDS, null);
+        Genre genre1 = new Genre(1L, KIDS, null);
         Genre genre2 = new Genre(1L, GenreType.SCI_FI, null);
 
-        GenreDTO genreDTO1 = new GenreDTO("KIDS", List.of(new BookDTO("Harry Potter", List.of("Joanne K. Rowling"), "KIDS")));
-        GenreDTO genreDTO2 = new GenreDTO("SCI_FI", List.of(new BookDTO("Düne", List.of("Frank Herbert"), "SCI_FI")));
+        GenreDTO genreDTO1 = new GenreDTO("KIDS", List.of(BOOKDTO_ONE));
+        GenreDTO genreDTO2 = new GenreDTO("SCI_FI", List.of(BOOKDTO_TWO));
 
         when(genreRepository.findAll()).thenReturn(List.of(genre1, genre2));
         when(mapper.toDTO(genre1)).thenReturn(genreDTO1);

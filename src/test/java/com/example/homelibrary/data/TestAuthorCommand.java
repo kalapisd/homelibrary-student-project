@@ -1,6 +1,6 @@
 package com.example.homelibrary.data;
 
-import com.example.homelibrary.DTO.commands.AuthorCommand;
+import com.example.homelibrary.command.AuthorCommand;
 
 public interface TestAuthorCommand {
 

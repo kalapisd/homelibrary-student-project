@@ -1,8 +1,8 @@
 package com.example.homelibrary.unit;
 
 import com.example.homelibrary.DTO.BookDTO;
-import com.example.homelibrary.DTO.commands.APICommand;
-import com.example.homelibrary.DTO.commands.BookCommand;
+import com.example.homelibrary.command.APICommand;
+import com.example.homelibrary.command.BookCommand;
 import com.example.homelibrary.entity.Author;
 import com.example.homelibrary.entity.Book;
 import com.example.homelibrary.entity.Genre;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class BookServiceTest {
+class BookServiceTest {
 
     @InjectMocks
     BookService service;
@@ -62,13 +62,35 @@ public class BookServiceTest {
     @Captor
     ArgumentCaptor<Book> bookArgumentCaptor;
 
+    private static final BookDTO BOOKDTO_ONE = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS", 5, null);
+    private static final BookDTO BOOKDTO_TWO = new BookDTO(2, "Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS", 4, null);
+    private static final Book BOOK_ONE = Book.builder().id(1L)
+                .title("Harry Potter és a Bölcsek Köve")
+                .subTitle(null)
+                .authors(new HashSet<>())
+            .genre(null)
+                .publishedYear(2000)
+                .numOfPages(316)
+                .copies(1)
+                .build();
+
+    private static final Book BOOK_TWO = Book.builder()
+            .id(2L)
+                .title("Harry Potter és a Titkok Kamrája")
+                .subTitle(null)
+                .authors(new HashSet<>())
+            .genre(null)
+                .publishedYear(2001)
+                .numOfPages(285)
+                .copies(1)
+                .build();
 
     @Test
     void should_return_empty_list_when_no_books_present() {
 
         when(bookRepository.findAll()).thenReturn(new ArrayList<>());
 
-        assertThat(service.findAllBooks()).hasSize(0);
+        assertThat(service.findAllBooks()).isEmpty();
         verify(bookRepository, times(1)).findAll();
         verifyNoMoreInteractions(bookRepository);
     }
@@ -79,8 +101,8 @@ public class BookServiceTest {
         setUpDatabaseForFindAll();
 
         List<BookDTO> expectedBookDTOs = List.of(
-                new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS"),
-                new BookDTO(2, "Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS")
+                BOOKDTO_ONE,
+                BOOKDTO_TWO
         );
 
         List<BookDTO> actualBookDTOs = service.findAllBooks();
@@ -99,8 +121,8 @@ public class BookServiceTest {
         String name = "Joanne K. Rowling";
 
         List<BookDTO> expectedBookDTOs = List.of(
-                new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS"),
-                new BookDTO(2, "Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS")
+                BOOKDTO_ONE,
+                BOOKDTO_TWO
         );
 
         List<BookDTO> actualBookDTOs = service.findAllBooksOfAuthor(name);
@@ -114,22 +136,10 @@ public class BookServiceTest {
     @Test
     void should_find_and_return_book_by_id() {
 
-        Book book = Book.builder()
-                .id(1L)
-                .title("Harry Potter és a Bölcsek Köve")
-                .subTitle(null)
-                .authors(new HashSet<>())
-                .genre(null)
-                .publishedYear(2000)
-                .numOfPages(316)
-                .piece(1)
-                .build();
-
-        when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
-        BookDTO expectedDTO = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
-        when(mapper.toDTO(any())).thenReturn(expectedDTO);
+        when(bookRepository.findById(anyLong())).thenReturn(Optional.of(BOOK_ONE));
+        when(mapper.toDTO(any())).thenReturn(BOOKDTO_ONE);
         BookDTO actualDTO = service.findBookById(1L);
-        assertEquals(expectedDTO, actualDTO);
+        assertEquals(BOOKDTO_ONE, actualDTO);
 
         verify(bookRepository, times(1)).findById(anyLong());
         verifyNoMoreInteractions(bookRepository);
@@ -147,22 +157,10 @@ public class BookServiceTest {
     @Test
     void should_find_and_return_bookDTO_by_title() {
 
-        Book book = Book.builder()
-                .id(1L)
-                .title("Harry Potter és a Bölcsek Köve")
-                .subTitle(null)
-                .authors(new HashSet<>())
-                .genre(null)
-                .publishedYear(2000)
-                .numOfPages(316)
-                .piece(1)
-                .build();
-
-        when(bookRepository.findByTitle(anyString())).thenReturn(Optional.of(book));
-        BookDTO expectedDTO = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
-        when(mapper.toDTO(any())).thenReturn(expectedDTO);
+        when(bookRepository.findByTitle(anyString())).thenReturn(Optional.of(BOOK_ONE));
+        when(mapper.toDTO(any())).thenReturn(BOOKDTO_ONE);
         BookDTO actualDTO = service.findBookByTitle("Harry Potter és a Bölcsek Köve");
-        assertEquals(expectedDTO, actualDTO);
+        assertEquals(BOOKDTO_ONE, actualDTO);
 
         verify(bookRepository, times(1)).findByTitle(anyString());
         verifyNoMoreInteractions(bookRepository);
@@ -215,19 +213,6 @@ public class BookServiceTest {
     @Test
     void should_update_book_when_id_is_correct() {
         Long id = 1L;
-
-        Book book = Book.builder()
-                .id(1L)
-                .title("Harry Potter és a Bölcsek Köve")
-                .subTitle(null)
-                .authors(new HashSet<>())
-                .genre(null)
-                .publishedYear(2000)
-                .numOfPages(316)
-                .piece(1)
-                .build();
-
-
         BookCommand bookCommand = BookCommand.builder()
                 .title("Harry Potter és az Azkabani fogoly")
                 .authors(null)
@@ -235,14 +220,14 @@ public class BookServiceTest {
                 .numOfPages(398)
                 .build();
 
-        when(bookRepository.findById(id)).thenReturn(Optional.of(book));
+        when(bookRepository.findById(id)).thenReturn(Optional.of(BOOK_ONE));
 
         String expectedName = "Harry Potter és az Azkabani fogoly";
-        when(mapper.toDTO(any())).thenReturn(new BookDTO(1, expectedName, null, null));
+        when(mapper.toDTO(any())).thenReturn(BOOKDTO_ONE);
         BookDTO returnDTO = service.updateBook(1L, bookCommand);
         String actualName = returnDTO.getTitle();
 
-        verify(bookRepository, times(1)).save(book);
+        verify(bookRepository, times(1)).save(BOOK_ONE);
         assertEquals(expectedName, actualName);
     }
 
@@ -306,25 +291,13 @@ public class BookServiceTest {
 
     @Test
     void should_add_author_to_book() {
-
-        Book book1 = Book.builder()
-                .id(1L)
-                .title("Harry Potter és a Bölcsek Köve")
-                .subTitle(null)
-                .authors(new HashSet<>())
-                .genre(null)
-                .publishedYear(2000)
-                .numOfPages(316)
-                .piece(1)
-                .build();
-
         Author author = Author.builder()
                 .id(1L)
                 .name("Joanne K. Rowling")
                 .books(new HashSet<>())
                 .build();
 
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(book1));
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(BOOK_ONE));
         when(authorService.getAuthorByName("Joanne K. Rowling")).thenReturn(Optional.of(author));
 
         service.addAuthorToBook("1", "Joanne K. Rowling");
@@ -335,24 +308,13 @@ public class BookServiceTest {
     @Test
     void should_add_genre_to_book() {
 
-        Book book1 = Book.builder()
-                .id(1L)
-                .title("Harry Potter és a Bölcsek Köve")
-                .subTitle(null)
-                .authors(new HashSet<>())
-                .genre(null)
-                .publishedYear(2000)
-                .numOfPages(316)
-                .piece(1)
-                .build();
-
         Genre kids = Genre.builder()
                 .id(1L)
                 .genreType(GenreType.KIDS)
                 .booksOfGenre(new HashSet<>())
                 .build();
 
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(book1));
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(BOOK_ONE));
         when(genreService.getGenreByType("KIDS")).thenReturn(Optional.of(kids));
 
         service.addGenreToBook("1", "KIDS");
@@ -361,67 +323,15 @@ public class BookServiceTest {
     }
 
     private void setUpDatabaseForFindAll() {
-
-        Book book1 = Book.builder()
-                .id(1L)
-                .title("Harry Potter és a Bölcsek Köve")
-                .subTitle(null)
-                .authors(new HashSet<>())
-                .genre(null)
-                .publishedYear(2000)
-                .numOfPages(316)
-                .piece(1)
-                .build();
-
-        Book book2 = Book.builder()
-                .id(2L)
-                .title("Harry Potter és a Titkok Kamrája")
-                .subTitle(null)
-                .authors(new HashSet<>())
-                .genre(null)
-                .publishedYear(2001)
-                .numOfPages(285)
-                .piece(1)
-                .build();
-
-        BookDTO bookDTO1 = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
-        BookDTO bookDTO2 = new BookDTO(2, "Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS");
-
-        when(bookRepository.findAll()).thenReturn(List.of(book1, book2));
-        when(mapper.toDTO(book1)).thenReturn(bookDTO1);
-        when(mapper.toDTO(book2)).thenReturn(bookDTO2);
+        when(bookRepository.findAll()).thenReturn(List.of(BOOK_ONE, BOOK_TWO));
+        when(mapper.toDTO(BOOK_ONE)).thenReturn(BOOKDTO_ONE);
+        when(mapper.toDTO(BOOK_TWO)).thenReturn(BOOKDTO_TWO);
     }
 
     private void setUpDatabaseForBooksOfAuthor() {
-
-        Book book1 = Book.builder()
-                .id(1L)
-                .title("Harry Potter és a Bölcsek Köve")
-                .subTitle(null)
-                .authors(new HashSet<>())
-                .genre(null)
-                .publishedYear(2000)
-                .numOfPages(316)
-                .piece(1)
-                .build();
-
-        Book book2 = Book.builder()
-                .id(2L)
-                .title("Harry Potter és a Titkok Kamrája")
-                .subTitle(null)
-                .authors(new HashSet<>())
-                .genre(null)
-                .publishedYear(2001)
-                .numOfPages(285)
-                .piece(1)
-                .build();
-
-        BookDTO bookDTO1 = new BookDTO(1, "Harry Potter és a Bölcsek Köve", List.of("Joanne K. Rowling"), "KIDS");
-        BookDTO bookDTO2 = new BookDTO(2, "Harry Potter és a Titkok Kamrája", List.of("Joanne K. Rowling"), "KIDS");
-
-        when(bookRepository.findAllByAuthors_NameOrderByTitle(any())).thenReturn(List.of(book1, book2));
-        when(mapper.toDTO(book1)).thenReturn(bookDTO1);
-        when(mapper.toDTO(book2)).thenReturn(bookDTO2);
+        when(bookRepository.findAllByAuthors_NameOrderByTitle(any())).thenReturn(List.of(BOOK_ONE, BOOK_TWO));
+        when(mapper.toDTO(BOOK_ONE)).thenReturn(BOOKDTO_ONE);
+        when(mapper.toDTO(BOOK_TWO)).thenReturn(BOOKDTO_TWO);
     }
 
     private Book buildOneBook() {
@@ -433,7 +343,7 @@ public class BookServiceTest {
                 .genre(null)
                 .publishedYear(2000)
                 .numOfPages(316)
-                .piece(1)
+                .copies(1)
                 .build();
 
         Author author = Author.builder()
@@ -465,7 +375,7 @@ public class BookServiceTest {
                 .genre(null)
                 .publishedYear(2000)
                 .numOfPages(316)
-                .piece(2)
+                .copies(2)
                 .build();
 
         Author author = Author.builder()

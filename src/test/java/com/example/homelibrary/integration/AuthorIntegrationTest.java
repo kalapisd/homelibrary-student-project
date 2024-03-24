@@ -2,8 +2,8 @@ package com.example.homelibrary.integration;
 
 import com.example.homelibrary.DTO.AuthorDTO;
 import com.example.homelibrary.DTO.BookDTO;
-import com.example.homelibrary.DTO.commands.AuthorCommand;
-import com.example.homelibrary.DTO.commands.BookCommand;
+import com.example.homelibrary.command.AuthorCommand;
+import com.example.homelibrary.command.BookCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AuthorIntegrationTest {
+class AuthorIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;

@@ -2,7 +2,7 @@ package com.example.homelibrary.integration;
 
 import com.example.homelibrary.DTO.AuthorDTO;
 import com.example.homelibrary.DTO.BookDTO;
-import com.example.homelibrary.DTO.commands.BookCommand;
+import com.example.homelibrary.command.BookCommand;
 import com.example.homelibrary.entity.GenreType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestPropertySource("/application.properties")
-public class BookIntegrationTest {
+class BookIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;

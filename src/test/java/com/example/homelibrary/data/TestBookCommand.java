@@ -1,6 +1,6 @@
 package com.example.homelibrary.data;
 
-import com.example.homelibrary.DTO.commands.BookCommand;
+import com.example.homelibrary.command.BookCommand;
 
 import java.util.List;
 
