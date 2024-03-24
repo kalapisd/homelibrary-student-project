@@ -1,4 +1,4 @@
-package com.example.homelibrary.DTO.commands;
+package com.example.homelibrary.command;
 
 import com.example.homelibrary.utils.validator.ValidTitle;
 import jakarta.validation.constraints.NotEmpty;

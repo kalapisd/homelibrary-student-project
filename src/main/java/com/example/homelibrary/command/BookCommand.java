@@ -1,4 +1,4 @@
-package com.example.homelibrary.DTO.commands;
+package com.example.homelibrary.command;
 
 import com.example.homelibrary.utils.validator.ValidGenre;
 import com.example.homelibrary.utils.validator.ValidPublishDate;
@@ -44,4 +44,6 @@ public class BookCommand {
 
     @NotNull(message = "Book language can't be null!")
     private String language;
+
+    private byte[] image;
 }
